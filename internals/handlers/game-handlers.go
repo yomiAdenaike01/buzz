@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"encoding/json"
+	"io"
 	"log"
 	"net/http"
 
@@ -38,15 +40,18 @@ func (h *Handlers) updgradeConnection(w http.ResponseWriter, r *http.Request) *w
 }
 
 func (h *Handlers) HandleConnectToGame(w http.ResponseWriter, r *http.Request) {
-	// handle participation
+
+	gameId := string(r.URL.Query().Get("id"))
+	playerId := string(r.URL.Query().Get("player_id"))
+	name := string(r.URL.Query().Get("name"))
+
+	if gameId == "" || playerId == "" {
+		responses.WriteErrResponse(w, http.StatusBadRequest, "Required params, gameId, playerId and name are required")
+	}
+
+	log.Printf("[handlers.HandleConnectToGame] Attempting to connect to game=%s", gameId)
 
 	// find game by id
-	gameId := string(r.URL.Query().Get("id"))
-	uid := string(r.URL.Query().Get("user_id"))
-	log.Printf("[handlers.HandleConnectToGame] Attempting to connect to game=%s", gameId)
-	if gameId == "" {
-		responses.WriteErrResponse(w, http.StatusBadRequest, "game doesn't exist")
-	}
 	g := h.store.FindGameById(gameId)
 	log.Printf("[handlers.HandleConnectToGame] Found game by id=%s", gameId)
 
@@ -56,15 +61,30 @@ func (h *Handlers) HandleConnectToGame(w http.ResponseWriter, r *http.Request) {
 	// connect to socket
 	conn := h.updgradeConnection(w, r)
 	// create participant
-	g.CreateParticipant(conn, &uid)
+	g.CreatePlayer(game.BaseCreatePlayerInput{
+		Connection: conn,
+		PlayerDetails: game.PlayerDetails{
+			Id:   playerId,
+			Name: name,
+		},
+	})
 }
 
 func (h *Handlers) HandleCreateGame(w http.ResponseWriter, r *http.Request) {
 	log.Println("[handlers.HandleCreateGame] Attempting to create game...")
 
 	uid := r.Context().Value("uid")
-	gameName := string(r.URL.Query().Get("name"))
-	log.Printf("[handlers.HandleCreateGame] Creating game name=%s", gameName)
+	d, err := io.ReadAll(r.Body)
+	if err != nil {
+		responses.WriteErrResponse(w, http.StatusInternalServerError, "request failed")
+	}
+	var createGameInput struct {
+		Name string `json:"name"`
+	}
+	if err := json.Unmarshal(d, &createGameInput); err != nil {
+		responses.WriteErrResponse(w, http.StatusInternalServerError, "failed to parse input")
+	}
+	log.Printf("[handlers.HandleCreateGame] Creating game name=%s", createGameInput.Name)
 	if uid == nil || uid == "" {
 		uid = uuid.NewString()
 	}
@@ -72,11 +92,11 @@ func (h *Handlers) HandleCreateGame(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		responses.WriteErrResponse(w, http.StatusInternalServerError, "failed to find user")
 	}
-	g := game.NewGame(gameName, uidString)
+	g := game.NewGame(createGameInput.Name, uidString)
 	h.store.AddNewGame(g)
 	responses.WriteJSON(w, map[string]any{
-		"id":       g.Id,
-		"owner_id": uidString,
+		"id":  g.Id,
+		"pid": uidString,
 	})
 
 }

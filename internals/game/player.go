@@ -11,13 +11,26 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-type Participant struct {
-	Id         string
-	connection *websocket.Conn
-	MsgIn      chan gameMessage
-	MsgOut     chan<- gameMessage
-	once       sync.Once
-	sw         sync.Mutex
+type PlayerDetails struct {
+	Name string `json:"name"`
+	Id   string `json:"id"`
+}
+type BaseCreatePlayerInput struct {
+	Connection *websocket.Conn `json:"-"`
+	PlayerDetails
+}
+type CreatePlayerInput struct {
+	Out chan<- gameMessage `json:"-"`
+	BaseCreatePlayerInput
+}
+type Player struct {
+	Id         string             `json:"id"`
+	connection *websocket.Conn    `json:"-"`
+	MsgIn      chan gameMessage   `json:"-"`
+	MsgOut     chan<- gameMessage `json:"-"`
+	once       sync.Once          `json:"-"`
+	sw         sync.Mutex         `json:"-"`
+	Name       string             `json:"name"`
 }
 
 const (
@@ -26,7 +39,7 @@ const (
 	pongWait   = 3 * pingPeriod   // tolerate a couple missed pongs (≈90s)
 )
 
-func (p *Participant) listen() {
+func (p *Player) listen() {
 	c := p.connection
 	c.SetReadDeadline(time.Now().Add(pongWait))
 	c.SetPongHandler(func(appData string) error {
@@ -59,7 +72,7 @@ func (p *Participant) listen() {
 	}
 }
 
-func (p *Participant) RemoveConnection() {
+func (p *Player) RemoveConnection() {
 	log.Printf("Attempting to remove connection for participantId=%s", p.Id)
 	p.once.Do(func() {
 		select {
@@ -91,7 +104,7 @@ func (p *Participant) RemoveConnection() {
 
 }
 
-func (p *Participant) write() {
+func (p *Player) write() {
 	t := time.NewTicker(pingPeriod)
 	defer func() {
 		t.Stop()
@@ -137,14 +150,18 @@ func (p *Participant) write() {
 
 }
 
-func NewParticipant(outChan chan<- gameMessage, conn *websocket.Conn) *Participant {
-	p := &Participant{
-		Id:         uuid.NewString(),
+func NewPlayer(input CreatePlayerInput) *Player {
+	if input.Id == "" {
+		input.Id = uuid.NewString()
+	}
+	p := &Player{
+		Id:         input.Id,
 		MsgIn:      make(chan gameMessage, 1025),
-		MsgOut:     outChan,
-		connection: conn,
+		MsgOut:     input.Out,
+		connection: input.Connection,
 		once:       sync.Once{},
 		sw:         sync.Mutex{},
+		Name:       input.Name,
 	}
 	go p.listen()
 	go p.write()
