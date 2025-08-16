@@ -1,0 +1,10 @@
+# Go build artifacts
+bin/
+build/
+dist/
+*.exe
+*.test
+*.out
+
+# If you're NOT using vendoring:
+vendor/

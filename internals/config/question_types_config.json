@@ -1,0 +1,81 @@
+{
+  "version": "1.0.0",
+  "categories": {
+    "Do It or Drink": {
+      "interaction_type": "action_or_drink",
+      "description": "A player performs a quick action; if they refuse or fail, they drink.",
+      "inputs": [],
+      "scoring": "optional_streak",
+      "timer_seconds": 20,
+      "ui": {
+        "show_timer_ring": true,
+        "primary_cta": "Did it",
+        "secondary_cta": "Drink",
+        "requires_host_decision": false
+      }
+    },
+    "Most Likely To": {
+      "interaction_type": "group_vote",
+      "description": "All players vote for the person who best fits the prompt. The winner drinks.",
+      "inputs": [
+        "vote:player_id"
+      ],
+      "scoring": "vote_winner_drinks",
+      "timer_seconds": 25,
+      "ui": {
+        "show_timer_ring": true,
+        "primary_cta": "Submit Vote",
+        "reveal_mode": "animated_tally",
+        "requires_host_decision": false
+      }
+    },
+    "Story or Drink": {
+      "interaction_type": "story_or_skip",
+      "description": "The prompted player tells a short story; if they skip, they drink.",
+      "inputs": [
+        "optional_voice_recording"
+      ],
+      "scoring": "none",
+      "timer_seconds": 45,
+      "ui": {
+        "show_timer_ring": true,
+        "primary_cta": "Told Story",
+        "secondary_cta": "Drink",
+        "allow_recording": true,
+        "requires_host_decision": false
+      }
+    },
+    "Group Challenge": {
+      "interaction_type": "first_to_act_or_group_condition",
+      "description": "Race-style or group-condition prompts. Either the first to complete drinks/gives drinks, or everyone matching a condition drinks.",
+      "inputs": [
+        "first_tap:player_id",
+        "host_confirm_winner"
+      ],
+      "scoring": "race_or_condition",
+      "timer_seconds": 15,
+      "ui": {
+        "show_timer_ring": true,
+        "primary_cta": "I Won",
+        "secondary_cta": "Confirm Winner (Host)",
+        "requires_host_decision": true
+      }
+    }
+  },
+  "schema": {
+    "interaction_type": {
+      "action_or_drink": {
+        "client_behavior": "Show action text + two buttons: Did it / Drink"
+      },
+      "group_vote": {
+        "client_behavior": "Show player list for selection; backend tallies votes"
+      },
+      "story_or_skip": {
+        "client_behavior": "Prompt storytelling; optional voice note; skip equals drink"
+      },
+      "first_to_act_or_group_condition": {
+        "client_behavior": "Either first-to-tap race or automatic group filter (e.g., everyone wearing black)"
+      }
+    }
+  }
+}
