@@ -1,210 +1,787 @@
 {
   "Do It or Drink": [
-    "Take a selfie with the person on your left or drink.",
-    "Do your best celebrity impression or drink.",
-    "Pretend to be a news anchor for 10 seconds or drink.",
-    "Sing the chorus of your favorite song or drink.",
-    "Take a sip with your eyes closed.",
-    "Balance something on your head for 5 seconds or drink.",
-    "Whisper a secret to the person opposite you or drink.",
-    "Make an animal noise — if someone guesses wrong, they drink.",
-    "Swap seats with someone or drink.",
-    "Take a sip using your non-dominant hand.",
-    "Pretend to be a waiter and 'serve' someone a drink.",
-    "Make up a dance move — everyone copies or drinks.",
-    "Say something in another language or drink.",
-    "Spin around three times — if you stumble, drink.",
-    "Tell the group your middle name or drink.",
-    "Compliment the person on your right or drink.",
-    "Wear an accessory from someone else or drink.",
-    "High-five everyone in the room or drink.",
-    "Pretend to take a phone call from your 'agent'.",
-    "Give someone a new nickname.",
-    "Close your eyes until your next turn or drink.",
-    "Try to touch your toes without bending your knees.",
-    "Do five squats or drink.",
-    "Pretend you’re in slow motion for 10 seconds.",
-    "Wink at someone until they laugh or drink.",
-    "Pretend to be a DJ for 5 seconds.",
-    "Swap a drink with the person next to you.",
-    "Pretend you’re on a cooking show.",
-    "Show the group your best 'evil villain' laugh.",
-    "Take a drink with your pinky finger up.",
-    "Whisper the alphabet backwards.",
-    "Invent a handshake with someone.",
-    "Walk across the room like a model.",
-    "Pretend you’re underwater for 5 seconds.",
-    "Pretend to cry dramatically.",
-    "Make a toast to an object in the room.",
-    "Pretend you’re a bouncer refusing someone entry.",
-    "Take a sip while humming a song.",
-    "Hold your breath until your next turn or drink.",
-    "Pretend you’re teaching a class on a random subject.",
-    "Describe your day in the style of a horror story.",
-    "Pretend you’re trying to sell your drink.",
-    "Give your best evil glare to someone.",
-    "Pretend your drink is a microphone and sing.",
-    "Tell the group your dream vacation.",
-    "Pretend you’re in a perfume ad.",
-    "Walk backwards to your seat.",
-    "Pretend your drink is too hot to handle.",
-    "Say 'cheers' in three languages.",
-    "Pretend your chair is a throne and you’re the ruler."
+    {
+      "id": "do-it-or-drink-002",
+      "text": "Do your best celebrity impression or drink."
+    },
+    {
+      "id": "do-it-or-drink-003",
+      "text": "Pretend to be a news anchor for 10 seconds or drink."
+    },
+    {
+      "id": "do-it-or-drink-004",
+      "text": "Sing the chorus of your favorite song or drink."
+    },
+    {
+      "id": "do-it-or-drink-005",
+      "text": "Take a sip with your eyes closed."
+    },
+    {
+      "id": "do-it-or-drink-006",
+      "text": "Balance something on your head for 5 seconds or drink."
+    },
+    {
+      "id": "do-it-or-drink-007",
+      "text": "Whisper a secret to the person opposite you or drink."
+    },
+    {
+      "id": "do-it-or-drink-008",
+      "text": "Make an animal noise — if someone guesses wrong, they drink."
+    },
+    {
+      "id": "do-it-or-drink-009",
+      "text": "Swap seats with someone or drink."
+    },
+    {
+      "id": "do-it-or-drink-010",
+      "text": "Take a sip using your non-dominant hand."
+    },
+    {
+      "id": "do-it-or-drink-011",
+      "text": "Pretend to be a waiter and 'serve' someone a drink."
+    },
+    {
+      "id": "do-it-or-drink-012",
+      "text": "Make up a dance move — everyone copies or drinks."
+    },
+    {
+      "id": "do-it-or-drink-013",
+      "text": "Say something in another language or drink."
+    },
+    {
+      "id": "do-it-or-drink-014",
+      "text": "Spin around three times — if you stumble, drink."
+    },
+    {
+      "id": "do-it-or-drink-015",
+      "text": "Tell the group your middle name or drink."
+    },
+    {
+      "id": "do-it-or-drink-016",
+      "text": "Compliment the person on your right or drink."
+    },
+    {
+      "id": "do-it-or-drink-017",
+      "text": "Wear an accessory from someone else or drink."
+    },
+    {
+      "id": "do-it-or-drink-018",
+      "text": "High-five everyone in the room or drink."
+    },
+    {
+      "id": "do-it-or-drink-019",
+      "text": "Pretend to take a phone call from your 'agent'."
+    },
+    {
+      "id": "do-it-or-drink-020",
+      "text": "Give someone a new nickname."
+    },
+    {
+      "id": "do-it-or-drink-021",
+      "text": "Close your eyes until your next turn or drink."
+    },
+    {
+      "id": "do-it-or-drink-022",
+      "text": "Try to touch your toes without bending your knees."
+    },
+    {
+      "id": "do-it-or-drink-023",
+      "text": "Do five squats or drink."
+    },
+    {
+      "id": "do-it-or-drink-024",
+      "text": "Pretend you’re in slow motion for 10 seconds."
+    },
+    {
+      "id": "do-it-or-drink-025",
+      "text": "Wink at someone until they laugh or drink."
+    },
+    {
+      "id": "do-it-or-drink-026",
+      "text": "Pretend to be a DJ for 5 seconds."
+    },
+    {
+      "id": "do-it-or-drink-027",
+      "text": "Swap a drink with the person next to you."
+    },
+    {
+      "id": "do-it-or-drink-028",
+      "text": "Pretend you’re on a cooking show."
+    },
+    {
+      "id": "do-it-or-drink-029",
+      "text": "Show the group your best 'evil villain' laugh."
+    },
+    {
+      "id": "do-it-or-drink-030",
+      "text": "Take a drink with your pinky finger up."
+    },
+    {
+      "id": "do-it-or-drink-031",
+      "text": "Whisper the alphabet backwards."
+    },
+    {
+      "id": "do-it-or-drink-032",
+      "text": "Invent a handshake with someone."
+    },
+    {
+      "id": "do-it-or-drink-033",
+      "text": "Walk across the room like a model."
+    },
+    {
+      "id": "do-it-or-drink-034",
+      "text": "Pretend you’re underwater for 5 seconds."
+    },
+    {
+      "id": "do-it-or-drink-035",
+      "text": "Pretend to cry dramatically."
+    },
+    {
+      "id": "do-it-or-drink-036",
+      "text": "Make a toast to an object in the room."
+    },
+    {
+      "id": "do-it-or-drink-037",
+      "text": "Pretend you’re a bouncer refusing someone entry."
+    },
+    {
+      "id": "do-it-or-drink-038",
+      "text": "Take a sip while humming a song."
+    },
+    {
+      "id": "do-it-or-drink-039",
+      "text": "Hold your breath until your next turn or drink."
+    },
+    {
+      "id": "do-it-or-drink-040",
+      "text": "Pretend you’re teaching a class on a random subject."
+    },
+    {
+      "id": "do-it-or-drink-041",
+      "text": "Describe your day in the style of a horror story."
+    },
+    {
+      "id": "do-it-or-drink-042",
+      "text": "Pretend you’re trying to sell your drink."
+    },
+    {
+      "id": "do-it-or-drink-043",
+      "text": "Give your best evil glare to someone."
+    },
+    {
+      "id": "do-it-or-drink-044",
+      "text": "Pretend your drink is a microphone and sing."
+    },
+    {
+      "id": "do-it-or-drink-045",
+      "text": "Tell the group your dream vacation."
+    },
+    {
+      "id": "do-it-or-drink-046",
+      "text": "Pretend you’re in a perfume ad."
+    },
+    {
+      "id": "do-it-or-drink-047",
+      "text": "Walk backwards to your seat."
+    },
+    {
+      "id": "do-it-or-drink-048",
+      "text": "Pretend your drink is too hot to handle."
+    },
+    {
+      "id": "do-it-or-drink-049",
+      "text": "Say 'cheers' in three languages."
+    },
+    {
+      "id": "do-it-or-drink-050",
+      "text": "Pretend your chair is a throne and you’re the ruler."
+    }
   ],
   "Most Likely To": [
-    "Most likely to survive a zombie apocalypse — that person drinks.",
-    "Most likely to forget their own birthday — drinks.",
-    "Most likely to become a millionaire — drinks.",
-    "Most likely to start dancing in public — drinks.",
-    "Most likely to sing in the shower — drinks.",
-    "Most likely to go skydiving — drinks.",
-    "Most likely to forget someone’s name — drinks.",
-    "Most likely to win a reality show — drinks.",
-    "Most likely to become famous — drinks.",
-    "Most likely to move to another country — drinks.",
-    "Most likely to run a marathon — drinks.",
-    "Most likely to own 10 cats — drinks.",
-    "Most likely to eat dessert for breakfast — drinks.",
-    "Most likely to be late to their own wedding — drinks.",
-    "Most likely to laugh at a bad joke — drinks.",
-    "Most likely to cry during a movie — drinks.",
-    "Most likely to prank a friend — drinks.",
-    "Most likely to trip over nothing — drinks.",
-    "Most likely to binge-watch a show — drinks.",
-    "Most likely to become a politician — drinks.",
-    "Most likely to buy something useless online — drinks.",
-    "Most likely to lose their phone — drinks.",
-    "Most likely to eat something off the floor — drinks.",
-    "Most likely to talk to animals — drinks.",
-    "Most likely to forget why they entered a room — drinks.",
-    "Most likely to have a hidden talent — drinks.",
-    "Most likely to send a text to the wrong person — drinks.",
-    "Most likely to sing karaoke — drinks.",
-    "Most likely to befriend a stranger — drinks.",
-    "Most likely to get lost in their own city — drinks.",
-    "Most likely to wear mismatched socks — drinks.",
-    "Most likely to take a nap at a party — drinks.",
-    "Most likely to cry over spilled milk — drinks.",
-    "Most likely to forget to eat — drinks.",
-    "Most likely to quote movies in conversation — drinks.",
-    "Most likely to lose their keys — drinks.",
-    "Most likely to become a stand-up comedian — drinks.",
-    "Most likely to own a weird pet — drinks.",
-    "Most likely to spend hours on social media — drinks.",
-    "Most likely to burn toast — drinks.",
-    "Most likely to sing in public — drinks.",
-    "Most likely to eat something strange — drinks.",
-    "Most likely to laugh at their own joke — drinks.",
-    "Most likely to start a podcast — drinks.",
-    "Most likely to have the best poker face — drinks.",
-    "Most likely to start a food fight — drinks.",
-    "Most likely to break into song — drinks.",
-    "Most likely to give the best hugs — drinks.",
-    "Most likely to get a tattoo on a dare — drinks.",
-    "Most likely to win a hot dog eating contest — drinks."
+    {
+      "id": "most-likely-to-001",
+      "text": "Most likely to survive a zombie apocalypse — that person drinks."
+    },
+    {
+      "id": "most-likely-to-002",
+      "text": "Most likely to forget their own birthday — drinks."
+    },
+    {
+      "id": "most-likely-to-003",
+      "text": "Most likely to become a millionaire — drinks."
+    },
+    {
+      "id": "most-likely-to-004",
+      "text": "Most likely to start dancing in public — drinks."
+    },
+    {
+      "id": "most-likely-to-006",
+      "text": "Most likely to go skydiving — drinks."
+    },
+    {
+      "id": "most-likely-to-007",
+      "text": "Most likely to forget someone’s name — drinks."
+    },
+    {
+      "id": "most-likely-to-008",
+      "text": "Most likely to win love island — drinks."
+    },
+    {
+      "id": "most-likely-to-009",
+      "text": "Most likely to become famous — drinks."
+    },
+  
+    {
+      "id": "most-likely-to-012",
+      "text": "Most likely to own 10 cats — drinks."
+    },
+    {
+      "id": "most-likely-to-014",
+      "text": "Most likely to be late to their own wedding — drinks."
+    },
+    {
+      "id": "most-likely-to-015",
+      "text": "Most likely to laugh at a bad joke — drinks."
+    },
+    {
+      "id": "most-likely-to-016",
+      "text": "Most likely to cry during a movie — drinks."
+    },
+    {
+      "id": "most-likely-to-017",
+      "text": "Most likely to prank a friend — drinks."
+    },
+    {
+      "id": "most-likely-to-018",
+      "text": "Most likely to trip over nothing — drinks."
+    },
+    {
+      "id": "most-likely-to-019",
+      "text": "Most likely to binge-watch a show — drinks."
+    },
+    {
+      "id": "most-likely-to-020",
+      "text": "Most likely to become a politician — drinks."
+    },
+    {
+      "id": "most-likely-to-021",
+      "text": "Most likely to buy something useless online — drinks."
+    },
+    {
+      "id": "most-likely-to-022",
+      "text": "Most likely to lose their phone — drinks."
+    },
+    {
+      "id": "most-likely-to-023",
+      "text": "Most likely to eat something off the floor — drinks."
+    },
+    {
+      "id": "most-likely-to-024",
+      "text": "Most likely to talk to animals — drinks."
+    },
+    {
+      "id": "most-likely-to-025",
+      "text": "Most likely to forget why they entered a room — drinks."
+    },
+    {
+      "id": "most-likely-to-026",
+      "text": "Most likely to have a hidden talent — drinks."
+    },
+    {
+      "id": "most-likely-to-027",
+      "text": "Most likely to send a text to the wrong person — drinks."
+    },
+    {
+      "id": "most-likely-to-028",
+      "text": "Most likely to sing karaoke — drinks."
+    },
+    {
+      "id": "most-likely-to-029",
+      "text": "Most likely to befriend a stranger — drinks."
+    },
+    {
+      "id": "most-likely-to-030",
+      "text": "Most likely to get lost in their own city — drinks."
+    },
+    {
+      "id": "most-likely-to-031",
+      "text": "Most likely to wear mismatched socks — drinks."
+    },
+    {
+      "id": "most-likely-to-032",
+      "text": "Most likely to take a nap at a party — drinks."
+    },
+    {
+      "id": "most-likely-to-033",
+      "text": "Most likely to cry over spilled milk — drinks."
+    },
+    {
+      "id": "most-likely-to-034",
+      "text": "Most likely to forget to eat — drinks."
+    },
+    {
+      "id": "most-likely-to-035",
+      "text": "Most likely to quote movies in conversation — drinks."
+    },
+    {
+      "id": "most-likely-to-036",
+      "text": "Most likely to lose their keys — drinks."
+    },
+    {
+      "id": "most-likely-to-037",
+      "text": "Most likely to become a stand-up comedian — drinks."
+    },
+    {
+      "id": "most-likely-to-038",
+      "text": "Most likely to own a weird pet — drinks."
+    },
+    {
+      "id": "most-likely-to-039",
+      "text": "Most likely to spend hours on social media — drinks."
+    },
+    {
+      "id": "most-likely-to-040",
+      "text": "Most likely to burn toast — drinks."
+    },
+    {
+      "id": "most-likely-to-041",
+      "text": "Most likely to sing in public — drinks."
+    },
+    {
+      "id": "most-likely-to-042",
+      "text": "Most likely to eat something strange — drinks."
+    },
+    {
+      "id": "most-likely-to-043",
+      "text": "Most likely to laugh at their own joke — drinks."
+    },
+    {
+      "id": "most-likely-to-044",
+      "text": "Most likely to start a podcast — drinks."
+    },
+    {
+      "id": "most-likely-to-045",
+      "text": "Most likely to have the best poker face — drinks."
+    },
+    {
+      "id": "most-likely-to-046",
+      "text": "Most likely to start a food fight — drinks."
+    },
+    {
+      "id": "most-likely-to-047",
+      "text": "Most likely to break into song — drinks."
+    },
+    {
+      "id": "most-likely-to-048",
+      "text": "Most likely to give the best hugs — drinks."
+    },
+    {
+      "id": "most-likely-to-049",
+      "text": "Most likely to get a tattoo on a dare — drinks."
+    },
+    {
+      "id": "most-likely-to-050",
+      "text": "Most likely to win a hot dog eating contest — drinks."
+    }
   ],
   "Story or Drink": [
-    "Tell a funny childhood story or drink.",
-    "Share your most embarrassing moment or drink.",
-    "What’s the weirdest thing you’ve ever eaten? Drink if you can’t say.",
-    "What’s the most awkward date you’ve had? Drink if you skip.",
-    "Share a time you laughed at the wrong moment.",
-    "Tell the group about a weird talent you have.",
-    "Share the most trouble you’ve been in.",
-    "Describe your first crush.",
-    "Share the funniest text you’ve sent.",
-    "Tell a story involving food gone wrong.",
-    "Share a time you got lost.",
-    "Describe your worst haircut.",
-    "Share a time you couldn’t stop laughing.",
-    "Talk about the weirdest dream you’ve had.",
-    "Share your worst cooking disaster.",
-    "Tell a story about an awkward family dinner.",
-    "Share the funniest thing a pet has done.",
-    "Tell about a time you embarrassed yourself at school.",
-    "Talk about the strangest gift you’ve received.",
-    "Share a time you laughed until you cried.",
-    "Talk about the weirdest fashion choice you’ve made.",
-    "Tell about a time you forgot something important.",
-    "Share your worst travel story.",
-    "Talk about the weirdest job you’ve had.",
-    "Tell about a prank gone wrong.",
-    "Share a time you met someone famous.",
-    "Talk about the silliest argument you’ve had.",
-    "Share a time you got caught doing something weird.",
-    "Describe your worst holiday experience.",
-    "Tell about a time you fell asleep in public.",
-    "Share the most random thing you own.",
-    "Talk about the weirdest place you’ve been.",
-    "Tell about a time you lied to get out of something.",
-    "Share a time you couldn’t stop hiccupping.",
-    "Talk about your strangest habit.",
-    "Share your weirdest superstition.",
-    "Tell about the funniest autocorrect fail you’ve had.",
-    "Talk about the most awkward hug you’ve given.",
-    "Share a time you lost something important.",
-    "Tell about your weirdest snack combo.",
-    "Describe your funniest school memory.",
-    "Share the weirdest sound you’ve made.",
-    "Talk about the funniest thing you’ve overheard.",
-    "Share the weirdest thing you’ve done when bored.",
-    "Tell about your funniest kitchen disaster.",
-    "Describe the most awkward silence you’ve experienced.",
-    "Share a time you wore something backwards by mistake.",
-    "Talk about your funniest sports fail.",
-    "Share your weirdest “oops” moment.",
-    "Tell about a time you accidentally insulted someone."
+    {
+      "id": "story-or-drink-002",
+      "text": "Share your most embarrassing moment or drink."
+    },
+    {
+      "id": "story-or-drink-003",
+      "text": "What’s the weirdest thing you’ve ever eaten? Drink if you can’t say."
+    },
+    {
+      "id": "story-or-drink-004",
+      "text": "What’s the most awkward date you’ve had? Drink if you skip."
+    },
+    {
+      "id": "story-or-drink-005",
+      "text": "Share a time you laughed at the wrong moment."
+    },
+    {
+      "id": "story-or-drink-006",
+      "text": "Tell the group about a weird talent you have."
+    },
+    {
+      "id": "story-or-drink-007",
+      "text": "Share the most trouble you’ve been in."
+    },
+    {
+      "id": "story-or-drink-008",
+      "text": "Describe your first crush."
+    },
+    {
+      "id": "story-or-drink-009",
+      "text": "Share the funniest text you’ve sent."
+    },
+    {
+      "id": "story-or-drink-010",
+      "text": "Tell a story involving food gone wrong."
+    },
+    {
+      "id": "story-or-drink-011",
+      "text": "Share a time you got lost."
+    },
+    {
+      "id": "story-or-drink-012",
+      "text": "Describe your worst haircut."
+    },
+    {
+      "id": "story-or-drink-013",
+      "text": "Share a time you couldn’t stop laughing."
+    },
+    {
+      "id": "story-or-drink-014",
+      "text": "Talk about the weirdest dream you’ve had."
+    },
+    {
+      "id": "story-or-drink-015",
+      "text": "Share your worst cooking disaster."
+    },
+    {
+      "id": "story-or-drink-016",
+      "text": "Tell a story about an awkward family dinner."
+    },
+    {
+      "id": "story-or-drink-017",
+      "text": "Share the funniest thing a pet has done."
+    },
+    {
+      "id": "story-or-drink-018",
+      "text": "Tell about a time you embarrassed yourself at school."
+    },
+    {
+      "id": "story-or-drink-019",
+      "text": "Talk about the strangest gift you’ve received."
+    },
+    {
+      "id": "story-or-drink-020",
+      "text": "Share a time you laughed until you cried."
+    },
+    {
+      "id": "story-or-drink-021",
+      "text": "Talk about the weirdest fashion choice you’ve made."
+    },
+    {
+      "id": "story-or-drink-022",
+      "text": "Tell about a time you forgot something important."
+    },
+    {
+      "id": "story-or-drink-023",
+      "text": "Share your worst travel story."
+    },
+    {
+      "id": "story-or-drink-024",
+      "text": "Talk about the weirdest job you’ve had."
+    },
+    {
+      "id": "story-or-drink-025",
+      "text": "Tell about a prank gone wrong."
+    },
+    {
+      "id": "story-or-drink-026",
+      "text": "Share a time you met someone famous."
+    },
+    {
+      "id": "story-or-drink-027",
+      "text": "Talk about the silliest argument you’ve had."
+    },
+    {
+      "id": "story-or-drink-028",
+      "text": "Share a time you got caught doing something weird."
+    },
+    {
+      "id": "story-or-drink-029",
+      "text": "Describe your worst holiday experience."
+    },
+    {
+      "id": "story-or-drink-030",
+      "text": "Tell about a time you fell asleep in public."
+    },
+    {
+      "id": "story-or-drink-031",
+      "text": "Share the most random thing you own."
+    },
+    {
+      "id": "story-or-drink-032",
+      "text": "Talk about the weirdest place you’ve been."
+    },
+    {
+      "id": "story-or-drink-033",
+      "text": "Tell about a time you lied to get out of something."
+    },
+    {
+      "id": "story-or-drink-034",
+      "text": "Share a time you couldn’t stop hiccupping."
+    },
+    {
+      "id": "story-or-drink-035",
+      "text": "Talk about your strangest habit."
+    },
+    {
+      "id": "story-or-drink-036",
+      "text": "Share your weirdest superstition."
+    },
+    {
+      "id": "story-or-drink-037",
+      "text": "Tell about the funniest autocorrect fail you’ve had."
+    },
+    {
+      "id": "story-or-drink-038",
+      "text": "Talk about the most awkward hug you’ve given."
+    },
+    {
+      "id": "story-or-drink-039",
+      "text": "Share a time you lost something important."
+    },
+    {
+      "id": "story-or-drink-040",
+      "text": "Tell about your weirdest snack combo."
+    },
+    {
+      "id": "story-or-drink-041",
+      "text": "Describe your funniest school memory."
+    },
+    {
+      "id": "story-or-drink-042",
+      "text": "Share the weirdest sound you’ve made."
+    },
+    {
+      "id": "story-or-drink-043",
+      "text": "Talk about the funniest thing you’ve overheard."
+    },
+    {
+      "id": "story-or-drink-044",
+      "text": "Share the weirdest thing you’ve done when bored."
+    },
+    {
+      "id": "story-or-drink-045",
+      "text": "Tell about your funniest kitchen disaster."
+    },
+    {
+      "id": "story-or-drink-046",
+      "text": "Describe the most awkward silence you’ve experienced."
+    },
+    {
+      "id": "story-or-drink-047",
+      "text": "Share a time you wore something backwards by mistake."
+    },
+    {
+      "id": "story-or-drink-048",
+      "text": "Talk about your funniest sports fail."
+    },
+    {
+      "id": "story-or-drink-049",
+      "text": "Share your weirdest “oops” moment."
+    },
+    {
+      "id": "story-or-drink-050",
+      "text": "Tell about a time you accidentally insulted someone."
+    }
   ],
   "Group Challenge": [
-    "Everyone swap seats. Last one to sit drinks.",
-    "First person to touch the door drinks.",
-    "Everyone must hold hands for the next round.",
-    "Everyone with shoelaces drinks.",
-    "First person to name 3 countries drinks.",
-    "Everyone with blue eyes drinks.",
-    "Everyone taller than the host drinks.",
-    "First to find something red wins — rest drink.",
-    "Everyone born in the same month drinks.",
-    "First to finish their drink chooses someone else to drink.",
-    "Everyone with a watch drinks.",
-    "First to touch the floor drinks.",
-    "Everyone with a phone case drinks.",
-    "First to make an animal noise drinks.",
-    "Everyone with socks on drinks.",
-    "First to do 5 jumping jacks drinks.",
-    "Everyone with their phone on the table drinks.",
-    "First to raise their hand drinks.",
-    "Everyone who has been abroad drinks.",
-    "First to hum a song drinks.",
-    "Everyone with a middle name drinks.",
-    "First to whistle drinks.",
-    "Everyone wearing black drinks.",
-    "First to point at the ceiling drinks.",
-    "Everyone with glasses drinks.",
-    "First to clap drinks.",
-    "Everyone who has a tattoo drinks.",
-    "First to say “cheers” drinks.",
-    "Everyone who has been to a concert drinks.",
-    "First to laugh drinks.",
-    "Everyone with brown hair drinks.",
-    "First to touch their nose drinks.",
-    "Everyone who likes pizza drinks.",
-    "First to spell their name backwards drinks.",
-    "Everyone who can speak another language drinks.",
-    "First to find a coin drinks.",
-    "Everyone who has a pet drinks.",
-    "First to stand on one foot drinks.",
-    "Everyone wearing jeans drinks.",
-    "First to pretend they’re a robot drinks.",
-    "Everyone who owns a hat drinks.",
-    "First to sing drinks.",
-    "Everyone with more than 3 apps open drinks.",
-    "First to tell a joke drinks.",
-    "Everyone who can swim drinks.",
-    "First to touch both knees drinks.",
-    "Everyone who likes chocolate drinks.",
-    "First to wink drinks.",
-    "Everyone who has broken a bone drinks.",
-    "First to make a silly face drinks."
+    {
+      "id": "group-challenge-001",
+      "text": "Everyone swap seats. Last one to sit drinks."
+    },
+    {
+      "id": "group-challenge-002",
+      "text": "First person to touch the door drinks."
+    },
+    {
+      "id": "group-challenge-003",
+      "text": "Everyone must hold hands for the next round."
+    },
+    {
+      "id": "group-challenge-004",
+      "text": "Everyone with shoelaces drinks."
+    },
+    {
+      "id": "group-challenge-005",
+      "text": "First person to name 3 countries drinks."
+    },
+    {
+      "id": "group-challenge-006",
+      "text": "Everyone with blue eyes drinks."
+    },
+    {
+      "id": "group-challenge-007",
+      "text": "Everyone taller than the host drinks."
+    },
+    {
+      "id": "group-challenge-008",
+      "text": "First to find something red wins — rest drink."
+    },
+    {
+      "id": "group-challenge-009",
+      "text": "Everyone born in the same month drinks."
+    },
+    {
+      "id": "group-challenge-010",
+      "text": "First to finish their drink chooses someone else to drink."
+    },
+    {
+      "id": "group-challenge-011",
+      "text": "Everyone with a watch drinks."
+    },
+    {
+      "id": "group-challenge-012",
+      "text": "First to touch the floor drinks."
+    },
+    {
+      "id": "group-challenge-013",
+      "text": "Everyone with a phone case drinks."
+    },
+    {
+      "id": "group-challenge-014",
+      "text": "First to make an animal noise drinks."
+    },
+    {
+      "id": "group-challenge-015",
+      "text": "Everyone with socks on drinks."
+    },
+    {
+      "id": "group-challenge-016",
+      "text": "First to do 5 jumping jacks drinks."
+    },
+    {
+      "id": "group-challenge-017",
+      "text": "Everyone with their phone on the table drinks."
+    },
+    {
+      "id": "group-challenge-018",
+      "text": "First to raise their hand drinks."
+    },
+    {
+      "id": "group-challenge-019",
+      "text": "Everyone who has been abroad drinks."
+    },
+    {
+      "id": "group-challenge-020",
+      "text": "First to hum a song drinks."
+    },
+    {
+      "id": "group-challenge-021",
+      "text": "Everyone with a middle name drinks."
+    },
+    {
+      "id": "group-challenge-022",
+      "text": "First to whistle drinks."
+    },
+    {
+      "id": "group-challenge-023",
+      "text": "Everyone wearing black drinks."
+    },
+    {
+      "id": "group-challenge-024",
+      "text": "First to point at the ceiling drinks."
+    },
+    {
+      "id": "group-challenge-025",
+      "text": "Everyone with glasses drinks."
+    },
+    {
+      "id": "group-challenge-026",
+      "text": "First to clap drinks."
+    },
+    {
+      "id": "group-challenge-027",
+      "text": "Everyone who has a tattoo drinks."
+    },
+    {
+      "id": "group-challenge-028",
+      "text": "First to say “cheers” drinks."
+    },
+    {
+      "id": "group-challenge-029",
+      "text": "Everyone who has been to a concert drinks."
+    },
+    {
+      "id": "group-challenge-030",
+      "text": "First to laugh drinks."
+    },
+    {
+      "id": "group-challenge-031",
+      "text": "Everyone with brown hair drinks."
+    },
+    {
+      "id": "group-challenge-032",
+      "text": "First to touch their nose drinks."
+    },
+    {
+      "id": "group-challenge-033",
+      "text": "Everyone who likes pizza drinks."
+    },
+    {
+      "id": "group-challenge-034",
+      "text": "First to spell their name backwards drinks."
+    },
+    {
+      "id": "group-challenge-035",
+      "text": "Everyone who can speak another language drinks."
+    },
+    {
+      "id": "group-challenge-036",
+      "text": "First to find a coin drinks."
+    },
+    {
+      "id": "group-challenge-037",
+      "text": "Everyone who has a pet drinks."
+    },
+    {
+      "id": "group-challenge-038",
+      "text": "First to stand on one foot drinks."
+    },
+    {
+      "id": "group-challenge-039",
+      "text": "Everyone wearing jeans drinks."
+    },
+    {
+      "id": "group-challenge-040",
+      "text": "First to pretend they’re a robot drinks."
+    },
+    {
+      "id": "group-challenge-041",
+      "text": "Everyone who owns a hat drinks."
+    },
+    {
+      "id": "group-challenge-042",
+      "text": "First to sing drinks."
+    },
+    {
+      "id": "group-challenge-043",
+      "text": "Everyone with more than 3 apps open drinks."
+    },
+    {
+      "id": "group-challenge-044",
+      "text": "First to tell a joke drinks."
+    },
+    {
+      "id": "group-challenge-045",
+      "text": "Everyone who can swim drinks."
+    },
+    {
+      "id": "group-challenge-046",
+      "text": "First to touch both knees drinks."
+    },
+    {
+      "id": "group-challenge-047",
+      "text": "Everyone who likes chocolate drinks."
+    },
+    {
+      "id": "group-challenge-048",
+      "text": "First to wink drinks."
+    },
+    {
+      "id": "group-challenge-049",
+      "text": "Everyone who has broken a bone drinks."
+    },
+    {
+      "id": "group-challenge-050",
+      "text": "First to make a silly face drinks."
+    }
   ]
 }

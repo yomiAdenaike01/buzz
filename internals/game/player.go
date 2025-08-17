@@ -68,6 +68,7 @@ func (p *Player) listen() {
 		select {
 		case p.MsgOut <- g:
 		default:
+			log.Println("[listen]: Failed to send message")
 		}
 	}
 }

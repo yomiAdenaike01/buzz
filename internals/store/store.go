@@ -48,7 +48,15 @@ func (s *Store) Shutdown(ctx context.Context) error {
 func (s *Store) AddNewGame(g *game.Game) {
 	s.ongoingGames[g.Id] = g
 }
-
+func (s *Store) FindGameByShortCode(code string) *game.Game {
+	for _, g := range s.ongoingGames {
+		if g.Shortcode != code {
+			continue
+		}
+		return g
+	}
+	return nil
+}
 func (s *Store) FindGameById(id string) *game.Game {
 	if g, ok := s.ongoingGames[id]; ok {
 		return g
