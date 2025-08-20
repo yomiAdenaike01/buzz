@@ -9,6 +9,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
+	"github.com/yomiAdenaike01/buzz-core/internals/constants"
 )
 
 type PlayerDetails struct {
@@ -40,12 +41,18 @@ const (
 	pongWait   = 3 * pingPeriod   // tolerate a couple missed pongs (≈90s)
 )
 
-func (p *Player) Consume(msg gameMessage) {
+func (p *Player) Consume(msg gameMessage) bool {
 	select {
 	case p.MsgIn <- msg:
+	case <-time.After(constants.MAX_EMIT_TIMEOUT):
+		// might be slow consider dropping
+		log.Println("[Player.Consume]: Failed to send message in duration, dropping player")
+		p.RemoveConnection()
+		return false
 	default:
 		log.Println("Failed to send message")
 	}
+	return true
 }
 
 func (p *Player) listen() {
@@ -83,8 +90,8 @@ func (p *Player) listen() {
 }
 
 func (p *Player) RemoveConnection() {
-	log.Printf("Attempting to remove connection for participantId=%s", p.Id)
 	p.once.Do(func() {
+		log.Printf("Attempting to remove connection for participantId=%s", p.Id)
 		select {
 		case p.MsgOut <- gameMessage{
 			SentFrom:    p.Id,

@@ -20,7 +20,7 @@ type ConnectState struct {
 	Code     string `json:"code"`
 	Name     string `json:"name"`
 	Token    string `json:"token"`
-	PlayerId string `json:"player_id"`
+	PlayerId string `json:"playerId"`
 	Id       string `json:"id"`
 }
 
@@ -78,18 +78,18 @@ func (h *Handlers) HandleConnectToGame(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Printf("[handlers.HandleConnectToGame] Attempting to connect to game=%s", state.Id)
-	var g *game.Game
+	var gameInstance *game.Game
 
 	if state.Id != "" {
-		g = h.gameService.FindGameById(state.Id)
+		gameInstance = h.gameService.FindGameById(state.Id)
 	}
 	if state.Code != "" {
-		g = h.gameService.FindGameByShortCode(state.Code)
+		gameInstance = h.gameService.FindGameByShortCode(state.Code)
 	}
 
 	log.Printf("[handlers.HandleConnectToGame] Found game by id=%s", state.Id)
 
-	if g == nil {
+	if gameInstance == nil {
 		responses.WriteErrResponse(w, http.StatusNotFound, "failed to find game")
 		return
 	}
@@ -100,7 +100,7 @@ func (h *Handlers) HandleConnectToGame(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	g.CreatePlayer(game.BaseCreatePlayerInput{
+	gameInstance.CreatePlayer(game.BaseCreatePlayerInput{
 		Connection: conn,
 		PlayerDetails: game.PlayerDetails{
 			Id:                state.PlayerId,
@@ -113,7 +113,6 @@ func (h *Handlers) HandleConnectToGame(w http.ResponseWriter, r *http.Request) {
 func (h *Handlers) HandleCreateGame(w http.ResponseWriter, r *http.Request) {
 	log.Println("[handlers.HandleCreateGame] Attempting to create game...")
 
-	uid := r.Context().Value("uid")
 	d, err := io.ReadAll(r.Body)
 	if err != nil {
 		responses.WriteErrResponse(w, http.StatusInternalServerError, "request failed")
@@ -125,21 +124,15 @@ func (h *Handlers) HandleCreateGame(w http.ResponseWriter, r *http.Request) {
 		responses.WriteErrResponse(w, http.StatusInternalServerError, "failed to parse input")
 	}
 	log.Printf("[handlers.HandleCreateGame] Creating game name=%s", createGameInput.Name)
-	if uid == nil || uid == "" {
-		uid = uuid.NewString()
-	}
-	uidString, ok := uid.(string)
-	if !ok {
-		responses.WriteErrResponse(w, http.StatusInternalServerError, "failed to find user")
-	}
-	g := h.gameService.CreateGame(game.NewGameInput{
+	playerId := uuid.NewString()
+	gameInstance := h.gameService.CreateGame(game.NewGameInput{
 		Name:      createGameInput.Name,
-		OwnerId:   uidString,
+		OwnerId:   playerId,
 		Questions: h.gameService.GetQuestions(),
 	})
 	responses.WriteJSON(w, map[string]any{
-		"id":  g.Id,
-		"pid": uidString,
+		"id":  gameInstance.Id,
+		"pid": playerId,
 	})
 
 }

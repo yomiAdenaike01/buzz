@@ -2,786 +2,480 @@
   "Do It or Drink": [
     {
       "id": "do-it-or-drink-002",
-      "text": "Do your best celebrity impression or drink."
+      "text": "Do your best celebrity impression or drink.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-003",
-      "text": "Pretend to be a news anchor for 10 seconds or drink."
+      "text": "Pretend to be a news anchor for 10 seconds or drink.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-004",
-      "text": "Sing the chorus of your favorite song or drink."
+      "text": "Sing the chorus of your favorite song or drink.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-005",
-      "text": "Take a sip with your eyes closed."
+      "text": "Take a sip with your eyes closed.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-006",
-      "text": "Balance something on your head for 5 seconds or drink."
+      "text": "Balance something on your head for 5 seconds or drink.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-007",
-      "text": "Whisper a secret to the person opposite you or drink."
+      "text": "Whisper a secret to the person opposite you or drink.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-008",
-      "text": "Make an animal noise — if someone guesses wrong, they drink."
+      "text": "Make an animal noise \u2014 if someone guesses wrong, they drink.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-009",
-      "text": "Swap seats with someone or drink."
+      "text": "Swap seats with someone or drink.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-010",
-      "text": "Take a sip using your non-dominant hand."
+      "text": "Take a sip using your non-dominant hand.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-011",
-      "text": "Pretend to be a waiter and 'serve' someone a drink."
+      "text": "Pretend to be a waiter and 'serve' someone a drink.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-012",
-      "text": "Make up a dance move — everyone copies or drinks."
+      "text": "Make up a dance move \u2014 everyone copies or drinks.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-013",
-      "text": "Say something in another language or drink."
+      "text": "Say something in another language or drink.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-014",
-      "text": "Spin around three times — if you stumble, drink."
+      "text": "Spin around three times \u2014 if you stumble, drink.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-015",
-      "text": "Tell the group your middle name or drink."
+      "text": "Tell the group your middle name or drink.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-016",
-      "text": "Compliment the person on your right or drink."
+      "text": "Compliment the person on your right or drink.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-017",
-      "text": "Wear an accessory from someone else or drink."
+      "text": "Wear an accessory from someone else or drink.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-018",
-      "text": "High-five everyone in the room or drink."
+      "text": "High-five everyone in the room or drink.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-019",
-      "text": "Pretend to take a phone call from your 'agent'."
+      "text": "Pretend to take a phone call from your 'agent'.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-020",
-      "text": "Give someone a new nickname."
+      "text": "Give someone a new nickname.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-021",
-      "text": "Close your eyes until your next turn or drink."
+      "text": "Close your eyes until your next turn or drink.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-022",
-      "text": "Try to touch your toes without bending your knees."
+      "text": "Try to touch your toes without bending your knees.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-023",
-      "text": "Do five squats or drink."
+      "text": "Do five squats or drink.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-024",
-      "text": "Pretend you’re in slow motion for 10 seconds."
+      "text": "Pretend you\u2019re in slow motion for 10 seconds.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-025",
-      "text": "Wink at someone until they laugh or drink."
+      "text": "Wink at someone until they laugh or drink.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-026",
-      "text": "Pretend to be a DJ for 5 seconds."
+      "text": "Pretend to be a DJ for 5 seconds.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-027",
-      "text": "Swap a drink with the person next to you."
+      "text": "Swap a drink with the person next to you.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-028",
-      "text": "Pretend you’re on a cooking show."
+      "text": "Pretend you\u2019re on a cooking show.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-029",
-      "text": "Show the group your best 'evil villain' laugh."
+      "text": "Show the group your best 'evil villain' laugh.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-030",
-      "text": "Take a drink with your pinky finger up."
+      "text": "Take a drink with your pinky finger up.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-031",
-      "text": "Whisper the alphabet backwards."
+      "text": "Whisper the alphabet backwards.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-032",
-      "text": "Invent a handshake with someone."
+      "text": "Invent a handshake with someone.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-033",
-      "text": "Walk across the room like a model."
+      "text": "Walk across the room like a model.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-034",
-      "text": "Pretend you’re underwater for 5 seconds."
+      "text": "Pretend you\u2019re underwater for 5 seconds.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-035",
-      "text": "Pretend to cry dramatically."
+      "text": "Pretend to cry dramatically.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-036",
-      "text": "Make a toast to an object in the room."
+      "text": "Make a toast to an object in the room.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-037",
-      "text": "Pretend you’re a bouncer refusing someone entry."
+      "text": "Pretend you\u2019re a bouncer refusing someone entry.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-038",
-      "text": "Take a sip while humming a song."
+      "text": "Take a sip while humming a song.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-039",
-      "text": "Hold your breath until your next turn or drink."
+      "text": "Hold your breath until your next turn or drink.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-040",
-      "text": "Pretend you’re teaching a class on a random subject."
+      "text": "Pretend you\u2019re teaching a class on a random subject.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-041",
-      "text": "Describe your day in the style of a horror story."
+      "text": "Describe your day in the style of a horror story.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-042",
-      "text": "Pretend you’re trying to sell your drink."
+      "text": "Pretend you\u2019re trying to sell your drink.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-043",
-      "text": "Give your best evil glare to someone."
+      "text": "Give your best evil glare to someone.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-044",
-      "text": "Pretend your drink is a microphone and sing."
+      "text": "Pretend your drink is a microphone and sing.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-045",
-      "text": "Tell the group your dream vacation."
+      "text": "Tell the group your dream vacation.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-046",
-      "text": "Pretend you’re in a perfume ad."
+      "text": "Pretend you\u2019re in a perfume ad.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-047",
-      "text": "Walk backwards to your seat."
+      "text": "Walk backwards to your seat.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-048",
-      "text": "Pretend your drink is too hot to handle."
+      "text": "Pretend your drink is too hot to handle.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-049",
-      "text": "Say 'cheers' in three languages."
+      "text": "Say 'cheers' in three languages.",
+      "category": "Do It or Drink"
     },
     {
       "id": "do-it-or-drink-050",
-      "text": "Pretend your chair is a throne and you’re the ruler."
+      "text": "Pretend your chair is a throne and you\u2019re the ruler.",
+      "category": "Do It or Drink"
     }
   ],
   "Most Likely To": [
     {
       "id": "most-likely-to-001",
-      "text": "Most likely to survive a zombie apocalypse — that person drinks."
+      "text": "Most likely to survive a zombie apocalypse \u2014 that person drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-002",
-      "text": "Most likely to forget their own birthday — drinks."
+      "text": "Most likely to forget their own birthday \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-003",
-      "text": "Most likely to become a millionaire — drinks."
+      "text": "Most likely to become a millionaire \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-004",
-      "text": "Most likely to start dancing in public — drinks."
+      "text": "Most likely to start dancing in public \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-006",
-      "text": "Most likely to go skydiving — drinks."
+      "text": "Most likely to go skydiving \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-007",
-      "text": "Most likely to forget someone’s name — drinks."
+      "text": "Most likely to forget someone\u2019s name \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-008",
-      "text": "Most likely to win love island — drinks."
+      "text": "Most likely to win love island \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-009",
-      "text": "Most likely to become famous — drinks."
+      "text": "Most likely to become famous \u2014 drinks.",
+      "category": "Most Likely To"
     },
-  
     {
       "id": "most-likely-to-012",
-      "text": "Most likely to own 10 cats — drinks."
+      "text": "Most likely to own 10 cats \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-014",
-      "text": "Most likely to be late to their own wedding — drinks."
+      "text": "Most likely to be late to their own wedding \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-015",
-      "text": "Most likely to laugh at a bad joke — drinks."
+      "text": "Most likely to laugh at a bad joke \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-016",
-      "text": "Most likely to cry during a movie — drinks."
+      "text": "Most likely to cry during a movie \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-017",
-      "text": "Most likely to prank a friend — drinks."
+      "text": "Most likely to prank a friend \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-018",
-      "text": "Most likely to trip over nothing — drinks."
+      "text": "Most likely to trip over nothing \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-019",
-      "text": "Most likely to binge-watch a show — drinks."
+      "text": "Most likely to binge-watch a show \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-020",
-      "text": "Most likely to become a politician — drinks."
+      "text": "Most likely to become a politician \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-021",
-      "text": "Most likely to buy something useless online — drinks."
+      "text": "Most likely to buy something useless online \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-022",
-      "text": "Most likely to lose their phone — drinks."
+      "text": "Most likely to lose their phone \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-023",
-      "text": "Most likely to eat something off the floor — drinks."
+      "text": "Most likely to eat something off the floor \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-024",
-      "text": "Most likely to talk to animals — drinks."
+      "text": "Most likely to talk to animals \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-025",
-      "text": "Most likely to forget why they entered a room — drinks."
+      "text": "Most likely to forget why they entered a room \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-026",
-      "text": "Most likely to have a hidden talent — drinks."
+      "text": "Most likely to have a hidden talent \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-027",
-      "text": "Most likely to send a text to the wrong person — drinks."
+      "text": "Most likely to send a text to the wrong person \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-028",
-      "text": "Most likely to sing karaoke — drinks."
+      "text": "Most likely to sing karaoke \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-029",
-      "text": "Most likely to befriend a stranger — drinks."
+      "text": "Most likely to befriend a stranger \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-030",
-      "text": "Most likely to get lost in their own city — drinks."
+      "text": "Most likely to get lost in their own city \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-031",
-      "text": "Most likely to wear mismatched socks — drinks."
+      "text": "Most likely to wear mismatched socks \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-032",
-      "text": "Most likely to take a nap at a party — drinks."
+      "text": "Most likely to take a nap at a party \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-033",
-      "text": "Most likely to cry over spilled milk — drinks."
+      "text": "Most likely to cry over spilled milk \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-034",
-      "text": "Most likely to forget to eat — drinks."
+      "text": "Most likely to forget to eat \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-035",
-      "text": "Most likely to quote movies in conversation — drinks."
+      "text": "Most likely to quote movies in conversation \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-036",
-      "text": "Most likely to lose their keys — drinks."
+      "text": "Most likely to lose their keys \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-037",
-      "text": "Most likely to become a stand-up comedian — drinks."
+      "text": "Most likely to become a stand-up comedian \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-038",
-      "text": "Most likely to own a weird pet — drinks."
+      "text": "Most likely to own a weird pet \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-039",
-      "text": "Most likely to spend hours on social media — drinks."
+      "text": "Most likely to spend hours on social media \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-040",
-      "text": "Most likely to burn toast — drinks."
+      "text": "Most likely to burn toast \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-041",
-      "text": "Most likely to sing in public — drinks."
+      "text": "Most likely to sing in public \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-042",
-      "text": "Most likely to eat something strange — drinks."
+      "text": "Most likely to eat something strange \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-043",
-      "text": "Most likely to laugh at their own joke — drinks."
+      "text": "Most likely to laugh at their own joke \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-044",
-      "text": "Most likely to start a podcast — drinks."
+      "text": "Most likely to start a podcast \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-045",
-      "text": "Most likely to have the best poker face — drinks."
+      "text": "Most likely to have the best poker face \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-046",
-      "text": "Most likely to start a food fight — drinks."
+      "text": "Most likely to start a food fight \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-047",
-      "text": "Most likely to break into song — drinks."
+      "text": "Most likely to break into song \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-048",
-      "text": "Most likely to give the best hugs — drinks."
+      "text": "Most likely to give the best hugs \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-049",
-      "text": "Most likely to get a tattoo on a dare — drinks."
+      "text": "Most likely to get a tattoo on a dare \u2014 drinks.",
+      "category": "Most Likely To"
     },
     {
       "id": "most-likely-to-050",
-      "text": "Most likely to win a hot dog eating contest — drinks."
-    }
-  ],
-  "Storytelling": [
-    {
-      "id": "story-or-drink-002",
-      "text": "Share your most embarrassing moment or drink."
-    },
-    {
-      "id": "story-or-drink-003",
-      "text": "What’s the weirdest thing you’ve ever eaten? Drink if you can’t say."
-    },
-    {
-      "id": "story-or-drink-004",
-      "text": "What’s the most awkward date you’ve had? Drink if you skip."
-    },
-    {
-      "id": "story-or-drink-005",
-      "text": "Share a time you laughed at the wrong moment."
-    },
-    {
-      "id": "story-or-drink-006",
-      "text": "Tell the group about a weird talent you have."
-    },
-    {
-      "id": "story-or-drink-007",
-      "text": "Share the most trouble you’ve been in."
-    },
-    {
-      "id": "story-or-drink-008",
-      "text": "Describe your first crush."
-    },
-    {
-      "id": "story-or-drink-009",
-      "text": "Share the funniest text you’ve sent."
-    },
-    {
-      "id": "story-or-drink-010",
-      "text": "Tell a story involving food gone wrong."
-    },
-    {
-      "id": "story-or-drink-011",
-      "text": "Share a time you got lost."
-    },
-    {
-      "id": "story-or-drink-012",
-      "text": "Describe your worst haircut."
-    },
-    {
-      "id": "story-or-drink-013",
-      "text": "Share a time you couldn’t stop laughing."
-    },
-    {
-      "id": "story-or-drink-014",
-      "text": "Talk about the weirdest dream you’ve had."
-    },
-    {
-      "id": "story-or-drink-015",
-      "text": "Share your worst cooking disaster."
-    },
-    {
-      "id": "story-or-drink-016",
-      "text": "Tell a story about an awkward family dinner."
-    },
-    {
-      "id": "story-or-drink-017",
-      "text": "Share the funniest thing a pet has done."
-    },
-    {
-      "id": "story-or-drink-018",
-      "text": "Tell about a time you embarrassed yourself at school."
-    },
-    {
-      "id": "story-or-drink-019",
-      "text": "Talk about the strangest gift you’ve received."
-    },
-    {
-      "id": "story-or-drink-020",
-      "text": "Share a time you laughed until you cried."
-    },
-    {
-      "id": "story-or-drink-021",
-      "text": "Talk about the weirdest fashion choice you’ve made."
-    },
-    {
-      "id": "story-or-drink-022",
-      "text": "Tell about a time you forgot something important."
-    },
-    {
-      "id": "story-or-drink-023",
-      "text": "Share your worst travel story."
-    },
-    {
-      "id": "story-or-drink-024",
-      "text": "Talk about the weirdest job you’ve had."
-    },
-    {
-      "id": "story-or-drink-025",
-      "text": "Tell about a prank gone wrong."
-    },
-    {
-      "id": "story-or-drink-026",
-      "text": "Share a time you met someone famous."
-    },
-    {
-      "id": "story-or-drink-027",
-      "text": "Talk about the silliest argument you’ve had."
-    },
-    {
-      "id": "story-or-drink-028",
-      "text": "Share a time you got caught doing something weird."
-    },
-    {
-      "id": "story-or-drink-029",
-      "text": "Describe your worst holiday experience."
-    },
-    {
-      "id": "story-or-drink-030",
-      "text": "Tell about a time you fell asleep in public."
-    },
-    {
-      "id": "story-or-drink-031",
-      "text": "Share the most random thing you own."
-    },
-    {
-      "id": "story-or-drink-032",
-      "text": "Talk about the weirdest place you’ve been."
-    },
-    {
-      "id": "story-or-drink-033",
-      "text": "Tell about a time you lied to get out of something."
-    },
-    {
-      "id": "story-or-drink-034",
-      "text": "Share a time you couldn’t stop hiccupping."
-    },
-    {
-      "id": "story-or-drink-035",
-      "text": "Talk about your strangest habit."
-    },
-    {
-      "id": "story-or-drink-036",
-      "text": "Share your weirdest superstition."
-    },
-    {
-      "id": "story-or-drink-037",
-      "text": "Tell about the funniest autocorrect fail you’ve had."
-    },
-    {
-      "id": "story-or-drink-038",
-      "text": "Talk about the most awkward hug you’ve given."
-    },
-    {
-      "id": "story-or-drink-039",
-      "text": "Share a time you lost something important."
-    },
-    {
-      "id": "story-or-drink-040",
-      "text": "Tell about your weirdest snack combo."
-    },
-    {
-      "id": "story-or-drink-041",
-      "text": "Describe your funniest school memory."
-    },
-    {
-      "id": "story-or-drink-042",
-      "text": "Share the weirdest sound you’ve made."
-    },
-    {
-      "id": "story-or-drink-043",
-      "text": "Talk about the funniest thing you’ve overheard."
-    },
-    {
-      "id": "story-or-drink-044",
-      "text": "Share the weirdest thing you’ve done when bored."
-    },
-    {
-      "id": "story-or-drink-045",
-      "text": "Tell about your funniest kitchen disaster."
-    },
-    {
-      "id": "story-or-drink-046",
-      "text": "Describe the most awkward silence you’ve experienced."
-    },
-    {
-      "id": "story-or-drink-047",
-      "text": "Share a time you wore something backwards by mistake."
-    },
-    {
-      "id": "story-or-drink-048",
-      "text": "Talk about your funniest sports fail."
-    },
-    {
-      "id": "story-or-drink-049",
-      "text": "Share your weirdest “oops” moment."
-    },
-    {
-      "id": "story-or-drink-050",
-      "text": "Tell about a time you accidentally insulted someone."
-    }
-  ],
-  "Challenges": [
-    {
-      "id": "group-challenge-001",
-      "text": "Everyone swap seats. Last one to sit drinks."
-    },
-    {
-      "id": "group-challenge-002",
-      "text": "First person to touch the door drinks."
-    },
-    {
-      "id": "group-challenge-003",
-      "text": "Everyone must hold hands for the next round."
-    },
-    {
-      "id": "group-challenge-004",
-      "text": "Everyone with shoelaces drinks."
-    },
-    {
-      "id": "group-challenge-005",
-      "text": "First person to name 3 countries drinks."
-    },
-    {
-      "id": "group-challenge-006",
-      "text": "Everyone with blue eyes drinks."
-    },
-    {
-      "id": "group-challenge-007",
-      "text": "Everyone taller than the host drinks."
-    },
-    {
-      "id": "group-challenge-008",
-      "text": "First to find something red wins — rest drink."
-    },
-    {
-      "id": "group-challenge-009",
-      "text": "Everyone born in the same month drinks."
-    },
-    {
-      "id": "group-challenge-010",
-      "text": "First to finish their drink chooses someone else to drink."
-    },
-    {
-      "id": "group-challenge-011",
-      "text": "Everyone with a watch drinks."
-    },
-    {
-      "id": "group-challenge-012",
-      "text": "First to touch the floor drinks."
-    },
-    {
-      "id": "group-challenge-013",
-      "text": "Everyone with a phone case drinks."
-    },
-    {
-      "id": "group-challenge-014",
-      "text": "First to make an animal noise drinks."
-    },
-    {
-      "id": "group-challenge-015",
-      "text": "Everyone with socks on drinks."
-    },
-    {
-      "id": "group-challenge-016",
-      "text": "First to do 5 jumping jacks drinks."
-    },
-    {
-      "id": "group-challenge-017",
-      "text": "Everyone with their phone on the table drinks."
-    },
-    {
-      "id": "group-challenge-018",
-      "text": "First to raise their hand drinks."
-    },
-    {
-      "id": "group-challenge-019",
-      "text": "Everyone who has been abroad drinks."
-    },
-    {
-      "id": "group-challenge-020",
-      "text": "First to hum a song drinks."
-    },
-    {
-      "id": "group-challenge-021",
-      "text": "Everyone with a middle name drinks."
-    },
-    {
-      "id": "group-challenge-022",
-      "text": "First to whistle drinks."
-    },
-    {
-      "id": "group-challenge-023",
-      "text": "Everyone wearing black drinks."
-    },
-    {
-      "id": "group-challenge-024",
-      "text": "First to point at the ceiling drinks."
-    },
-    {
-      "id": "group-challenge-025",
-      "text": "Everyone with glasses drinks."
-    },
-    {
-      "id": "group-challenge-026",
-      "text": "First to clap drinks."
-    },
-    {
-      "id": "group-challenge-027",
-      "text": "Everyone who has a tattoo drinks."
-    },
-    {
-      "id": "group-challenge-028",
-      "text": "First to say “cheers” drinks."
-    },
-    {
-      "id": "group-challenge-029",
-      "text": "Everyone who has been to a concert drinks."
-    },
-    {
-      "id": "group-challenge-030",
-      "text": "First to laugh drinks."
-    },
-    {
-      "id": "group-challenge-031",
-      "text": "Everyone with brown hair drinks."
-    },
-    {
-      "id": "group-challenge-032",
-      "text": "First to touch their nose drinks."
-    },
-    {
-      "id": "group-challenge-033",
-      "text": "Everyone who likes pizza drinks."
-    },
-    {
-      "id": "group-challenge-034",
-      "text": "First to spell their name backwards drinks."
-    },
-    {
-      "id": "group-challenge-035",
-      "text": "Everyone who can speak another language drinks."
-    },
-    {
-      "id": "group-challenge-036",
-      "text": "First to find a coin drinks."
-    },
-    {
-      "id": "group-challenge-037",
-      "text": "Everyone who has a pet drinks."
-    },
-    {
-      "id": "group-challenge-038",
-      "text": "First to stand on one foot drinks."
-    },
-    {
-      "id": "group-challenge-039",
-      "text": "Everyone wearing jeans drinks."
-    },
-    {
-      "id": "group-challenge-040",
-      "text": "First to pretend they’re a robot drinks."
-    },
-    {
-      "id": "group-challenge-041",
-      "text": "Everyone who owns a hat drinks."
-    },
-    {
-      "id": "group-challenge-042",
-      "text": "First to sing drinks."
-    },
-    {
-      "id": "group-challenge-043",
-      "text": "Everyone with more than 3 apps open drinks."
-    },
-    {
-      "id": "group-challenge-044",
-      "text": "First to tell a joke drinks."
-    },
-    {
-      "id": "group-challenge-045",
-      "text": "Everyone who can swim drinks."
-    },
-    {
-      "id": "group-challenge-046",
-      "text": "First to touch both knees drinks."
-    },
-    {
-      "id": "group-challenge-047",
-      "text": "Everyone who likes chocolate drinks."
-    },
-    {
-      "id": "group-challenge-048",
-      "text": "First to wink drinks."
-    },
-    {
-      "id": "group-challenge-049",
-      "text": "Everyone who has broken a bone drinks."
-    },
-    {
-      "id": "group-challenge-050",
-      "text": "First to make a silly face drinks."
+      "text": "Most likely to win a hot dog eating contest \u2014 drinks.",
+      "category": "Most Likely To"
     }
   ]
 }

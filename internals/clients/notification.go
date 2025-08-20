@@ -21,6 +21,9 @@ type NotificationClient struct {
 }
 
 func (n *NotificationClient) SendNotification(body NotificationContent) error {
+	if body.To == "" {
+		return nil
+	}
 	request := &http.Request{
 		Method: "POST",
 		URL: &url.URL{

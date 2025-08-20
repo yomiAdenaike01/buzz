@@ -12,10 +12,12 @@ const (
 	MessageGameConnectSuccess   messageType = "GAME_CONNECTED_SUCCESS"
 	MessageTypeUserLeft         messageType = "USER_LEFT"
 	MessageTypeQuestionComplete messageType = "QUESTION_COMPLETE"
+	MessageSubmitVote           messageType = "SUBMIT_VOTE"
 	MessageTypeGameStart        messageType = "START_GAME"
 	MessageTypeAnswerQuestion   messageType = "ANSWER_QUESTION"
 	MessageTypeTillNextRound    messageType = "COUNTDOWN_TO_NEXT_ROUND"
 	MessageTypeGameEnd          messageType = "GAME_END"
+	MessageTypeVoteResult       messageType = "VOTE_RESULT"
 
 	SentFromGame  sentFrom = "GAME"
 	DestAll       dest     = "*"

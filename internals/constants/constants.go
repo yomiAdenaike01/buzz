@@ -1,5 +1,7 @@
 package constants
 
+import "time"
+
 type GAME_STATUS = string
 type MESSAGE = string
 
@@ -11,4 +13,5 @@ const (
 	GAMESTATUS_STOPPED         GAME_STATUS = "STOPPED"
 
 	MESSAGE_TYPE_PARTICIPANT_LEFT MESSAGE = "PARTICIPANT_LEFT"
+	MAX_EMIT_TIMEOUT                      = 250 * time.Millisecond
 )

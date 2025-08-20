@@ -36,6 +36,7 @@ type Game struct {
 	In                 chan gameMessage      `json:"-"`
 	round              *Round                `json:"-"`
 	notificationClient *clients.NotificationClient
+	votingRound        *VotingRound
 }
 
 type NewGameInput struct {
@@ -94,55 +95,6 @@ func (g *Game) toGameJSON() string {
 	return string(gameData)
 }
 
-// func (g *Game) nextAskerId() string {
-// 	g.sw.Lock()
-// 	defer g.sw.Unlock()
-// 	p := g.Players
-// 	existingAnsweredPlayers := make(map[string]bool, len(g.AnsweredPlayers))
-// 	for _, pid := range g.AnsweredPlayers {
-// 		existingAnsweredPlayers[pid] = true
-// 	}
-
-// 	l := len(existingAnsweredPlayers)
-// 	for pid := range p {
-// 		if l == 0 {
-// 			if pid == g.OwnerId {
-// 				continue
-// 			}
-// 			g.AnsweredPlayers = append(g.AnsweredPlayers, pid)
-// 			return pid
-// 		}
-// 		if _, seen := existingAnsweredPlayers[pid]; seen {
-// 			continue
-// 		}
-// 		g.AnsweredPlayers = append(g.AnsweredPlayers, pid)
-// 		return pid
-
-// 	}
-// 	return ""
-// }
-
-//	func (g *Game) nextQuestionId() config.Question {
-//		g.sw.Lock()
-//		defer g.sw.Unlock()
-//		usedQuestionsRef := make(map[string]bool, len(g.AnsweredQuestions))
-//		for _, q := range g.AnsweredQuestions {
-//			usedQuestionsRef[q] = true
-//		}
-//		l := len(g.AnsweredQuestions)
-//		for _, q := range g.RoundQuestionSet {
-//			if l == 0 {
-//				g.AnsweredQuestions = append(g.AnsweredQuestions, q.Id)
-//				return q
-//			}
-//			if _, seen := usedQuestionsRef[q.Id]; seen {
-//				continue
-//			}
-//			g.AnsweredQuestions = append(g.AnsweredQuestions, q.Id)
-//			return q
-//		}
-//		return config.Question{}
-//	}
 func (g *Game) getPlayerOrder() []string {
 	x := make([]string, 0, len(g.Players))
 	for k := range g.Players {
@@ -150,8 +102,8 @@ func (g *Game) getPlayerOrder() []string {
 	}
 	return x
 }
-func (g *Game) askQuestion() {
 
+func (g *Game) askQuestion() {
 	log.Println("[askQuestion]: Processing next question..")
 	askerId := g.round.nextAsker()
 	log.Printf("[askQuestion]: Found askerId=%s..", askerId)
@@ -165,7 +117,53 @@ func (g *Game) askQuestion() {
 		// round complete
 		return
 	}
+	g.maybeStartVotingRound(question)
+	g.emitQuestion(askerId, question)
+}
 
+func (g *Game) stopTimer() {
+	if g.timer != nil {
+		g.timer.Stop()
+	}
+}
+
+func (g *Game) maybeStartVotingRound(question config.Question) bool {
+	if question.Category != "Most Likely To" {
+		return false
+	}
+	log.Println("[Game.maybeStartVotingRound]: Starting voting round")
+	numPlayers := len(g.GetPlayers())
+	vr := NewVotingRound(question.Text, numPlayers)
+	g.sw.Lock()
+	g.stopTimer()
+
+	g.votingRound = vr
+	g.sw.Unlock()
+	// starting voting
+	go func(votingRound *VotingRound) {
+		<-votingRound.Done()
+		log.Println("[Game.maybeStartVotingRound]: Voting round complete")
+		g.emitVotingResult(votingRound)
+		g.sw.Lock()
+		if g.votingRound == vr {
+			g.votingRound = nil
+		}
+		g.sw.Unlock()
+	}(vr)
+	return true
+}
+
+func (g *Game) emitVotingResult(votingRound *VotingRound) {
+	result := votingRound.Result()
+	g.emit(gameMessage{
+		Content:     mustJSON(result),
+		MessageType: MessageTypeVoteResult,
+		Dest:        DestAll,
+		SentFrom:    "GAME",
+	})
+}
+
+func (g *Game) emitQuestion(askerId string, question config.Question) {
 	g.emit(gameMessage{
 		SentFrom:    SentFromGame,
 		Dest:        DestAll,
@@ -177,7 +175,6 @@ func (g *Game) askQuestion() {
 			"game_now_ms":    time.Now().UnixMilli(),
 			"question_index": g.round.getTurnIndex(),
 		})})
-
 }
 
 func (g *Game) schedule() {
@@ -193,7 +190,7 @@ func (g *Game) schedule() {
 	g.askQuestion()
 }
 
-func (g *Game) newRound() {
+func (g *Game) startNewRound() {
 	order := g.getPlayerOrder()
 	g.sw.Lock()
 	g.round = NewRound(g.RoundQuestionSet, order, time.Second*30, g.OwnerId)
@@ -201,7 +198,7 @@ func (g *Game) newRound() {
 }
 
 func (g *Game) start() {
-	g.newRound()
+	g.startNewRound()
 	g.changeAndBroadcastGameState(constants.GAMESTATUS_STARTED)
 	g.schedule()
 }
@@ -330,6 +327,8 @@ func (g *Game) emitNewPlayerJoined(newPlayerDetails PlayerDetails) {
 func (g *Game) emit(msg gameMessage) {
 	select {
 	case g.Out <- msg:
+	case <-time.After(constants.MAX_EMIT_TIMEOUT):
+		log.Println("emit timeout; dropping message type:", msg.MessageType)
 	default:
 		log.Println("Failed to send message to game out")
 	}
@@ -377,6 +376,19 @@ func (g *Game) answerQuestion(msg gameMessage) {
 
 	}
 }
+func (g *Game) submitVote(vote string) {
+	var playerVote Vote
+	if err := json.Unmarshal([]byte(vote), &playerVote); err != nil {
+		return
+	}
+	g.sw.RLock()
+	vr := g.votingRound
+	g.sw.RUnlock()
+	if vr == nil {
+		return
+	}
+	vr.SubmitVote(playerVote)
+}
 func (g *Game) loop() {
 	for msg := range g.In {
 		switch msg.MessageType {
@@ -388,6 +400,8 @@ func (g *Game) loop() {
 			g.RemovePlayer(msg.SentFrom)
 		case MessageTypeQuestionComplete:
 			g.schedule()
+		case MessageSubmitVote:
+			g.submitVote(msg.Content)
 		}
 	}
 }
@@ -426,6 +440,7 @@ func NewGame(input NewGameInput, notificationClient *clients.NotificationClient)
 		In:                 make(chan gameMessage, 256),
 		RoundQuestionSet:   input.Questions,
 		notificationClient: notificationClient,
+		votingRound:        nil,
 	}
 	go g.read()
 	go g.loop()
