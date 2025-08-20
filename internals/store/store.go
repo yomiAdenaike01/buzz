@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/yomiAdenaike01/buzz-core/internals/config"
-	"github.com/yomiAdenaike01/buzz-core/internals/constants"
 	"github.com/yomiAdenaike01/buzz-core/internals/game"
 )
 
@@ -70,19 +69,6 @@ func (s *Store) FindGameById(id string) *game.Game {
 	}
 	return nil
 }
-func (s *Store) GetAllGames() []*game.Game {
-	if len(s.ongoingGames) == 0 {
-		return []*game.Game{}
-	}
-	arr := make([]*game.Game, 0, len(s.ongoingGames))
-	for _, v := range s.ongoingGames {
-		if v.Status == constants.GAMESTATUS_ENDED {
-			continue
-		}
-		arr = append(arr, v)
-	}
-	return arr
-}
 
 func NewStore() *Store {
 	questions, err := loadChallenges()
@@ -91,7 +77,7 @@ func NewStore() *Store {
 		return nil
 	}
 	return &Store{
-		questionsSet: questions,
+		questionsSet: *questions,
 		ongoingGames: map[string]*game.Game{},
 	}
 }

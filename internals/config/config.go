@@ -14,7 +14,7 @@ type Question struct {
 	Category string `json:"category"`
 }
 
-func LoadDeck() (map[string][]Question, error) {
+func LoadDeck() (*map[string][]Question, error) {
 	data, err := files.ReadFile("questions_by_category.json")
 	if err != nil {
 		return nil, err
@@ -23,5 +23,5 @@ func LoadDeck() (map[string][]Question, error) {
 	if err := json.Unmarshal(data, &questionsByCat); err != nil {
 		return nil, err
 	}
-	return questionsByCat, nil
+	return &questionsByCat, nil
 }
