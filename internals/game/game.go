@@ -10,30 +10,38 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/yomiAdenaike01/buzz-core/internals/clients"
 	"github.com/yomiAdenaike01/buzz-core/internals/config"
 	"github.com/yomiAdenaike01/buzz-core/internals/constants"
 )
 
 type Game struct {
-	Name              string             `json:"name"`
-	Id                string             `json:"id"`
-	Players           map[string]*Player `json:"players"`
-	CurrentRound      int                `json:"current_round"`
-	CurrentQuestionId string             `json:"current_question_id"`
-	RoundQuestionSet  []config.Question  `json:"questions"`
-	AnsweredQuestions []string
-	AnsweredPlayers   []string              `json:"-"`
-	DateCreated       time.Time             `json:"date_created"`
-	Status            constants.GAME_STATUS `json:"status"`
-	Out               chan gameMessage      `json:"-"`
-	sw                sync.RWMutex          `json:"-"`
-	OwnerId           string                `json:"owner_id"`
-	Shortcode         string                `json:"shortcode"`
-	timer             *time.Timer           `json:"-"`
-	QuestionEndsAt    time.Time             `json:"-"`
-	loadOnce          sync.Once             `json:"-"`
-	In                chan gameMessage      `json:"-"`
-	round             *Round                `json:"-"`
+	Name               string             `json:"name"`
+	Id                 string             `json:"id"`
+	Players            map[string]*Player `json:"players"`
+	CurrentRound       int                `json:"current_round"`
+	CurrentQuestionId  string             `json:"current_question_id"`
+	RoundQuestionSet   []config.Question  `json:"questions"`
+	AnsweredQuestions  []string
+	AnsweredPlayers    []string              `json:"-"`
+	DateCreated        time.Time             `json:"date_created"`
+	Status             constants.GAME_STATUS `json:"status"`
+	Out                chan gameMessage      `json:"-"`
+	sw                 sync.RWMutex          `json:"-"`
+	OwnerId            string                `json:"owner_id"`
+	Shortcode          string                `json:"shortcode"`
+	timer              *time.Timer           `json:"-"`
+	QuestionEndsAt     time.Time             `json:"-"`
+	loadOnce           sync.Once             `json:"-"`
+	In                 chan gameMessage      `json:"-"`
+	round              *Round                `json:"-"`
+	notificationClient *clients.NotificationClient
+}
+
+type NewGameInput struct {
+	Name      string
+	OwnerId   string
+	Questions []config.Question
 }
 
 type GamePayload struct {
@@ -263,15 +271,11 @@ func (g *Game) CreatePlayer(input BaseCreatePlayerInput) *Player {
 	g.Players[p.Id] = p
 	g.sw.Unlock()
 	// alert users on new user joined
-	g.emit(gameMessage{
-		MessageType: MessageTypeUserJoined,
-		Content: mustJSON(PlayerDetails{
-			Id:   p.Id,
-			Name: p.Name,
-		}),
-		SentFrom: p.Id,
-		Dest:     DestNotSender,
+	g.emitNewPlayerJoined(PlayerDetails{
+		Id:   p.Id,
+		Name: p.Name,
 	})
+
 	// decide message type for after creating game
 	messageType := MessageGameCreatedSuccess
 
@@ -302,10 +306,30 @@ func (g *Game) RemovePlayer(pId string) {
 	p.RemoveConnection()
 }
 
+func (g *Game) sendNotification(notificationContent clients.NotificationContent) {
+	err := g.notificationClient.SendNotification(notificationContent)
+	if err != nil {
+		log.Printf("[Game.emitNewPlayerJoined] Failed to send notification to %s", notificationContent.To)
+	}
+}
+
+func (g *Game) emitNewPlayerJoined(newPlayerDetails PlayerDetails) {
+	g.emit(gameMessage{
+		MessageType: MessageTypeUserJoined,
+		Content:     mustJSON(newPlayerDetails),
+		SentFrom:    newPlayerDetails.Id,
+		Dest:        DestNotSender,
+	})
+	g.sendNotification(clients.NotificationContent{
+		Message: fmt.Sprintf("%s has joined %s", newPlayerDetails.Name, g.Name),
+		Title:   "New player joined",
+		To:      g.OwnerId,
+	})
+}
+
 func (g *Game) emit(msg gameMessage) {
 	select {
 	case g.Out <- msg:
-
 	default:
 		log.Println("Failed to send message to game out")
 	}
@@ -380,33 +404,28 @@ func (g *Game) read() {
 	}
 }
 
-type NewGameInput struct {
-	Name      string
-	OwnerId   string
-	Questions []config.Question
-}
-
-func NewGame(input NewGameInput) *Game {
+func NewGame(input NewGameInput, notificationClient *clients.NotificationClient) *Game {
 	code, err := generateShortCode()
 	if err != nil {
 		log.Println("[Game.NewGame]: Failed to generate shortcode")
 	}
 	g := &Game{
-		Id:               uuid.NewString(),
-		Players:          make(map[string]*Player),
-		AnsweredPlayers:  make([]string, 0, 10),
-		DateCreated:      time.Now(),
-		CurrentRound:     0,
-		Name:             input.Name,
-		Status:           constants.GAMESTATE_AWAITING_PLAYERS,
-		sw:               sync.RWMutex{},
-		Out:              make(chan gameMessage, 1025),
-		OwnerId:          input.OwnerId,
-		Shortcode:        code,
-		timer:            nil,
-		loadOnce:         sync.Once{},
-		In:               make(chan gameMessage, 256),
-		RoundQuestionSet: input.Questions,
+		Id:                 uuid.NewString(),
+		Players:            make(map[string]*Player),
+		AnsweredPlayers:    make([]string, 0, 10),
+		DateCreated:        time.Now(),
+		CurrentRound:       0,
+		Name:               input.Name,
+		Status:             constants.GAMESTATE_AWAITING_PLAYERS,
+		sw:                 sync.RWMutex{},
+		Out:                make(chan gameMessage, 1025),
+		OwnerId:            input.OwnerId,
+		Shortcode:          code,
+		timer:              nil,
+		loadOnce:           sync.Once{},
+		In:                 make(chan gameMessage, 256),
+		RoundQuestionSet:   input.Questions,
+		notificationClient: notificationClient,
 	}
 	go g.read()
 	go g.loop()

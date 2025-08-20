@@ -9,7 +9,9 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/yomiAdenaike01/buzz-core/internals/clients"
 	"github.com/yomiAdenaike01/buzz-core/internals/handlers"
+	"github.com/yomiAdenaike01/buzz-core/internals/services"
 	"github.com/yomiAdenaike01/buzz-core/internals/store"
 )
 
@@ -18,12 +20,14 @@ func main() {
 	port := ":9080"
 
 	appStore := store.NewStore()
-	h := handlers.Init(appStore)
+	notificationClient := clients.NewNotificationClient()
+	gameService := services.NewGameService(appStore, notificationClient)
+	h := handlers.NewHandlers(gameService)
 
 	m.HandleFunc("POST /create-game", h.HandleCreateGame)
-	m.HandleFunc("GET /all", h.HandleGamesList)
 	m.HandleFunc("GET /connect", h.HandleConnectToGame)
 	m.HandleFunc("GET /prompts", h.HandleGetPrompts)
+	m.HandleFunc("GET /healthz", h.HandleHealtchCheck)
 
 	s := &http.Server{
 		Handler: m,

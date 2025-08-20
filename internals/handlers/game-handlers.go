@@ -1,20 +1,31 @@
 package handlers
 
 import (
+	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
+	"net/url"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
 	"github.com/yomiAdenaike01/buzz-core/internals/game"
 	"github.com/yomiAdenaike01/buzz-core/internals/responses"
-	"github.com/yomiAdenaike01/buzz-core/internals/store"
+	"github.com/yomiAdenaike01/buzz-core/internals/services"
 )
 
+type ConnectState struct {
+	Code     string `json:"code"`
+	Name     string `json:"name"`
+	Token    string `json:"token"`
+	PlayerId string `json:"player_id"`
+	Id       string `json:"id"`
+}
+
 type Handlers struct {
-	store *store.Store
+	gameService *services.GameService
 }
 
 var u = websocket.Upgrader{
@@ -25,60 +36,76 @@ var u = websocket.Upgrader{
 	},
 }
 
-func Init(store *store.Store) *Handlers {
+func NewHandlers(gameService *services.GameService) *Handlers {
 	return &Handlers{
-		store: store,
+		gameService: gameService,
 	}
 }
 
-func (h *Handlers) updgradeConnection(w http.ResponseWriter, r *http.Request) *websocket.Conn {
+func (h *Handlers) updgradeConnection(w http.ResponseWriter, r *http.Request) (*websocket.Conn, error) {
 	conn, err := u.Upgrade(w, r, r.Header)
 	if err != nil {
-		return nil
+		return nil, err
 	}
-	return conn
+	return conn, nil
+}
+
+func getQueryStateParam(urlValues url.Values) (ConnectState, error) {
+	state := urlValues.Get("state")
+	var connectPayload ConnectState
+	decoded, err := base64.StdEncoding.DecodeString(state)
+	if err != nil {
+		return connectPayload, nil
+	}
+
+	if err := json.Unmarshal(decoded, &connectPayload); err != nil {
+		return connectPayload, nil
+	}
+	return connectPayload, nil
 }
 
 func (h *Handlers) HandleConnectToGame(w http.ResponseWriter, r *http.Request) {
+	stateQuery := r.URL.Query().Get("state")
+	state, err := getQueryStateParam(r.URL.Query())
+	if err != nil {
+		responses.WriteErrResponse(w, http.StatusBadRequest, fmt.Sprintf("failed to parse state=%s", stateQuery))
+		return
+	}
 
-	gameId := string(r.URL.Query().Get("id"))
-	playerId := string(r.URL.Query().Get("player_id"))
-	name := string(r.URL.Query().Get("name"))
-	code := string(r.URL.Query().Get("code"))
-
-	if gameId == "" && code == "" {
+	if state.Id == "" && state.Code == "" {
 		responses.WriteErrResponse(w, http.StatusBadRequest, "required params, code or game id are required")
 		return
 	}
 
-	log.Printf("[handlers.HandleConnectToGame] Attempting to connect to game=%s", gameId)
+	log.Printf("[handlers.HandleConnectToGame] Attempting to connect to game=%s", state.Id)
 	var g *game.Game
-	// find game by identifier
-	if gameId != "" {
-		g = h.store.FindGameById(gameId)
+
+	if state.Id != "" {
+		g = h.gameService.FindGameById(state.Id)
 	}
-	if code != "" {
-		g = h.store.FindGameByShortCode(code)
+	if state.Code != "" {
+		g = h.gameService.FindGameByShortCode(state.Code)
 	}
 
-	log.Printf("[handlers.HandleConnectToGame] Found game by id=%s", gameId)
+	log.Printf("[handlers.HandleConnectToGame] Found game by id=%s", state.Id)
 
 	if g == nil {
 		responses.WriteErrResponse(w, http.StatusNotFound, "failed to find game")
 		return
 	}
-	// connect to socket
-	conn := h.updgradeConnection(w, r)
-	if conn == nil {
-		responses.WriteErrResponse(w, http.StatusInternalServerError, "failed to establish a connection")
+
+	conn, err := h.updgradeConnection(w, r)
+	if err != nil {
+		responses.WriteErrResponse(w, http.StatusInternalServerError, fmt.Sprintf("failed to establish a connection reason=%s", err.Error()))
 		return
 	}
-	// create participant
+
 	g.CreatePlayer(game.BaseCreatePlayerInput{
 		Connection: conn,
 		PlayerDetails: game.PlayerDetails{
-			Id:   playerId,
-			Name: name,
+			Id:                state.PlayerId,
+			Name:              state.Name,
+			NotificationToken: state.Token,
 		},
 	})
 }
@@ -105,12 +132,11 @@ func (h *Handlers) HandleCreateGame(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		responses.WriteErrResponse(w, http.StatusInternalServerError, "failed to find user")
 	}
-	g := game.NewGame(game.NewGameInput{
+	g := h.gameService.CreateGame(game.NewGameInput{
 		Name:      createGameInput.Name,
 		OwnerId:   uidString,
-		Questions: h.store.GetGameQuestions(),
+		Questions: h.gameService.GetQuestions(),
 	})
-	h.store.AddNewGame(g)
 	responses.WriteJSON(w, map[string]any{
 		"id":  g.Id,
 		"pid": uidString,
@@ -118,16 +144,8 @@ func (h *Handlers) HandleCreateGame(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (h *Handlers) HandleGamesList(w http.ResponseWriter, r *http.Request) {
-	log.Println("[handlers.HandleGamesList]: Fetching current games")
-	ongoingGames := h.store.GetAllGames()
-	responses.WriteJSON(w, map[string]any{
-		"games": ongoingGames,
-	})
-}
-
 func (h *Handlers) HandleGetPrompts(w http.ResponseWriter, r *http.Request) {
-	questions := h.store.GetGameQuestions()
+	questions := h.gameService.GetQuestions()
 	rawQuestions, err := json.Marshal(questions)
 	if err != nil {
 		responses.WriteErrResponse(w, http.StatusInternalServerError, "failed to marshal questions")
@@ -136,4 +154,9 @@ func (h *Handlers) HandleGetPrompts(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(rawQuestions)
+}
+
+func (h *Handlers) HandleHealtchCheck(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprint(w, "ok")
 }

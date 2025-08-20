@@ -12,8 +12,9 @@ import (
 )
 
 type PlayerDetails struct {
-	Name string `json:"name"`
-	Id   string `json:"id"`
+	Name              string `json:"name"`
+	Id                string `json:"id"`
+	NotificationToken string `json:"-"`
 }
 type BaseCreatePlayerInput struct {
 	Connection *websocket.Conn `json:"-"`
