@@ -3,15 +3,22 @@ package store
 import (
 	"context"
 	"errors"
+	"log"
 	"sync"
 	"time"
 
+	"github.com/yomiAdenaike01/buzz-core/internals/config"
 	"github.com/yomiAdenaike01/buzz-core/internals/constants"
 	"github.com/yomiAdenaike01/buzz-core/internals/game"
 )
 
 type Store struct {
 	ongoingGames map[string]*game.Game
+	questionsSet []config.Question
+}
+
+func (s *Store) GetGameQuestions() []config.Question {
+	return s.questionsSet
 }
 
 func (s *Store) Shutdown(ctx context.Context) error {
@@ -76,8 +83,15 @@ func (s *Store) GetAllGames() []*game.Game {
 	}
 	return arr
 }
+
 func NewStore() *Store {
+	questions, err := loadChallenges()
+	if err != nil {
+		log.Printf("Failed to load challenges err=%v", err)
+		return nil
+	}
 	return &Store{
+		questionsSet: questions,
 		ongoingGames: map[string]*game.Game{},
 	}
 }

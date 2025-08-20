@@ -29,7 +29,7 @@
         "requires_host_decision": false
       }
     },
-    "Story or Drink": {
+    "Storytelling": {
       "interaction_type": "story_or_skip",
       "description": "The prompted player tells a short story; if they skip, they drink.",
       "inputs": [
@@ -45,7 +45,7 @@
         "requires_host_decision": false
       }
     },
-    "Group Challenge": {
+    "Challenges": {
       "interaction_type": "first_to_act_or_group_condition",
       "description": "Race-style or group-condition prompts. Either the first to complete drinks/gives drinks, or everyone matching a condition drinks.",
       "inputs": [

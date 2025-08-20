@@ -9,8 +9,9 @@ import (
 var files embed.FS
 
 type Question struct {
-	Id   string `json:"id"`
-	Text string `json:"text"`
+	Id       string `json:"id"`
+	Text     string `json:"text"`
+	Category string `json:"category"`
 }
 
 func LoadDeck() (map[string][]Question, error) {

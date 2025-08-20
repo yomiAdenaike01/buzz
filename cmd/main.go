@@ -23,6 +23,7 @@ func main() {
 	m.HandleFunc("POST /create-game", h.HandleCreateGame)
 	m.HandleFunc("GET /all", h.HandleGamesList)
 	m.HandleFunc("GET /connect", h.HandleConnectToGame)
+	m.HandleFunc("GET /prompts", h.HandleGetPrompts)
 
 	s := &http.Server{
 		Handler: m,

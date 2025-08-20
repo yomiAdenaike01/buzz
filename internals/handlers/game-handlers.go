@@ -105,7 +105,11 @@ func (h *Handlers) HandleCreateGame(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		responses.WriteErrResponse(w, http.StatusInternalServerError, "failed to find user")
 	}
-	g := game.NewGame(createGameInput.Name, uidString)
+	g := game.NewGame(game.NewGameInput{
+		Name:      createGameInput.Name,
+		OwnerId:   uidString,
+		Questions: h.store.GetGameQuestions(),
+	})
 	h.store.AddNewGame(g)
 	responses.WriteJSON(w, map[string]any{
 		"id":  g.Id,
@@ -120,4 +124,16 @@ func (h *Handlers) HandleGamesList(w http.ResponseWriter, r *http.Request) {
 	responses.WriteJSON(w, map[string]any{
 		"games": ongoingGames,
 	})
+}
+
+func (h *Handlers) HandleGetPrompts(w http.ResponseWriter, r *http.Request) {
+	questions := h.store.GetGameQuestions()
+	rawQuestions, err := json.Marshal(questions)
+	if err != nil {
+		responses.WriteErrResponse(w, http.StatusInternalServerError, "failed to marshal questions")
+		return
+	}
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(rawQuestions)
 }

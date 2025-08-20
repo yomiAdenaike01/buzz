@@ -2,14 +2,10 @@ package game
 
 import (
 	"context"
-	"crypto/rand"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"log"
 	"maps"
-	"math/big"
-	"strings"
 	"sync"
 	"time"
 
@@ -35,6 +31,9 @@ type Game struct {
 	Shortcode         string                `json:"shortcode"`
 	timer             *time.Timer           `json:"-"`
 	QuestionEndsAt    time.Time             `json:"-"`
+	loadOnce          sync.Once             `json:"-"`
+	In                chan gameMessage      `json:"-"`
+	round             *Round                `json:"-"`
 }
 
 type GamePayload struct {
@@ -49,13 +48,13 @@ type GamePayload struct {
 	Shortcode       string                `json:"short_code"`
 }
 
-func toJSON(data any) string {
+func mustJSON(data any) string {
 	d, _ := json.Marshal(data)
 	return string(d)
 }
 
 func (g *Game) toPlayersPayload() []PlayerDetails {
-	players := g.GetSnapshotPlayers()
+	players := g.GetPlayers()
 	playerArr := make([]PlayerDetails, 0, len(players))
 	for _, playerDetail := range players {
 		playerArr = append(playerArr, PlayerDetails{
@@ -87,125 +86,89 @@ func (g *Game) toGameJSON() string {
 	return string(gameData)
 }
 
-func (g *Game) loadChallenges() error {
-	g.sw.RLock()
-	l := len(g.RoundQuestionSet)
-	g.sw.RUnlock()
-	if l > 0 {
-		return nil
+// func (g *Game) nextAskerId() string {
+// 	g.sw.Lock()
+// 	defer g.sw.Unlock()
+// 	p := g.Players
+// 	existingAnsweredPlayers := make(map[string]bool, len(g.AnsweredPlayers))
+// 	for _, pid := range g.AnsweredPlayers {
+// 		existingAnsweredPlayers[pid] = true
+// 	}
+
+// 	l := len(existingAnsweredPlayers)
+// 	for pid := range p {
+// 		if l == 0 {
+// 			if pid == g.OwnerId {
+// 				continue
+// 			}
+// 			g.AnsweredPlayers = append(g.AnsweredPlayers, pid)
+// 			return pid
+// 		}
+// 		if _, seen := existingAnsweredPlayers[pid]; seen {
+// 			continue
+// 		}
+// 		g.AnsweredPlayers = append(g.AnsweredPlayers, pid)
+// 		return pid
+
+// 	}
+// 	return ""
+// }
+
+//	func (g *Game) nextQuestionId() config.Question {
+//		g.sw.Lock()
+//		defer g.sw.Unlock()
+//		usedQuestionsRef := make(map[string]bool, len(g.AnsweredQuestions))
+//		for _, q := range g.AnsweredQuestions {
+//			usedQuestionsRef[q] = true
+//		}
+//		l := len(g.AnsweredQuestions)
+//		for _, q := range g.RoundQuestionSet {
+//			if l == 0 {
+//				g.AnsweredQuestions = append(g.AnsweredQuestions, q.Id)
+//				return q
+//			}
+//			if _, seen := usedQuestionsRef[q.Id]; seen {
+//				continue
+//			}
+//			g.AnsweredQuestions = append(g.AnsweredQuestions, q.Id)
+//			return q
+//		}
+//		return config.Question{}
+//	}
+func (g *Game) getPlayerOrder() []string {
+	x := make([]string, 0, len(g.Players))
+	for k := range g.Players {
+		x = append(x, k)
 	}
-	questionsByCat, err := config.LoadDeck()
-	if err != nil {
-		return err
-	}
-	ch := make([]config.Question, 0, 10)
-	for _, questionsList := range questionsByCat {
-		l := len(questionsList)
-		if len(ch) >= 10 {
-			g.RoundQuestionSet = ch
-			return nil
-		}
-		for range questionsList {
-			r, err := rand.Int(rand.Reader, big.NewInt(int64(l)))
-			if err != nil {
-				return err
-			}
-			ch = append(ch, questionsList[r.Int64()])
-		}
-	}
-	if len(ch) == 0 {
-		return errors.New("no questions loaded")
-	}
-	g.sw.Lock()
-	g.RoundQuestionSet = ch
-	g.sw.Unlock()
-	return nil
+	return x
 }
-
-func (g *Game) nextAskerId() string {
-	g.sw.Lock()
-	defer g.sw.Unlock()
-	p := g.Players
-	existingAnsweredPlayers := make(map[string]bool, len(g.AnsweredPlayers))
-	for _, pid := range g.AnsweredPlayers {
-		existingAnsweredPlayers[pid] = true
-	}
-
-	l := len(existingAnsweredPlayers)
-	for pid := range p {
-		if l == 0 {
-			if pid == g.OwnerId {
-				continue
-			}
-			g.AnsweredPlayers = append(g.AnsweredPlayers, pid)
-			return pid
-		}
-		if _, seen := existingAnsweredPlayers[pid]; seen {
-			continue
-		}
-		g.AnsweredPlayers = append(g.AnsweredPlayers, pid)
-		return pid
-
-	}
-	return ""
-}
-
-func (g *Game) nextQuestionId() config.Question {
-	g.sw.Lock()
-	defer g.sw.Unlock()
-	usedQuestionsRef := make(map[string]bool, len(g.AnsweredQuestions))
-	for _, q := range g.AnsweredQuestions {
-		usedQuestionsRef[q] = true
-	}
-	l := len(g.AnsweredQuestions)
-	for _, q := range g.RoundQuestionSet {
-		if l == 0 {
-			g.AnsweredQuestions = append(g.AnsweredQuestions, q.Id)
-			return q
-		}
-		if _, seen := usedQuestionsRef[q.Id]; seen {
-			continue
-		}
-		g.AnsweredQuestions = append(g.AnsweredQuestions, q.Id)
-		return q
-	}
-	return config.Question{}
-}
-
 func (g *Game) askQuestion() {
+
 	log.Println("[askQuestion]: Processing next question..")
-	askerId := g.nextAskerId()
+	askerId := g.round.nextAsker()
 	log.Printf("[askQuestion]: Found askerId=%s..", askerId)
 	if askerId == "" {
 		// round complete
 		return
 	}
-	question := g.nextQuestionId()
+	question := g.round.nextQuestion()
 	log.Printf("[askQuestion]: Preparing to ask questionId=%s", question.Text)
 	if question.Id == "" {
 		// round complete
 		return
 	}
-	g.sw.RLock()
-	questionIndex := len(g.AnsweredQuestions)
-	g.sw.RUnlock()
-	select {
-	case g.Out <- gameMessage{
+
+	g.emit(gameMessage{
 		SentFrom:    SentFromGame,
 		Dest:        DestAll,
 		MessageType: MessageTypeGameAskQuestion,
-		Content: toJSON(map[string]any{
+		Content: mustJSON(map[string]any{
 			"player_id":      askerId,
 			"question":       question,
 			"ends_at_ms":     g.QuestionEndsAt.UnixMilli(),
 			"game_now_ms":    time.Now().UnixMilli(),
-			"question_index": questionIndex,
-		}),
-	}:
-		log.Println("[askQuestion]: Sending question to participants")
-	default:
-		log.Println("Failed to ask question game channel blocked")
-	}
+			"question_index": g.round.getTurnIndex(),
+		})})
 
 }
 
@@ -222,12 +185,15 @@ func (g *Game) schedule() {
 	g.askQuestion()
 }
 
+func (g *Game) newRound() {
+	order := g.getPlayerOrder()
+	g.sw.Lock()
+	g.round = NewRound(g.RoundQuestionSet, order, time.Second*30, g.OwnerId)
+	g.sw.Unlock()
+}
+
 func (g *Game) start() {
-	err := g.loadChallenges()
-	if err != nil {
-		log.Printf("Failed to start game err=%v", err)
-		return
-	}
+	g.newRound()
 	g.changeAndBroadcastGameState(constants.GAMESTATUS_STARTED)
 	g.schedule()
 }
@@ -236,25 +202,20 @@ func (g *Game) changeAndBroadcastGameState(status constants.GAME_STATUS) {
 	g.sw.Lock()
 	g.Status = status
 	g.sw.Unlock()
-	select {
-	case g.Out <- gameMessage{
+	g.emit(gameMessage{
 		SentFrom: g.OwnerId,
-		Content: toJSON(map[string]string{
+		Content: mustJSON(map[string]string{
 			"status": status,
 		}),
 		Dest:        DestAll,
 		MessageType: MessageTypeGameStateChange,
-	}:
-		log.Println("Game started")
-	default:
-		log.Println("[BroadCastGameStateChange]: Failed to start game")
-	}
+	})
 
 }
 
 func (g *Game) Stop(ctx context.Context) error {
-	s := g.GetSnapshotPlayers()
-	for _, p := range s {
+	players := g.GetPlayers()
+	for _, p := range players {
 		select {
 		case <-ctx.Done():
 			log.Printf("Failed to stop err=%s", ctx.Err())
@@ -262,10 +223,22 @@ func (g *Game) Stop(ctx context.Context) error {
 			p.RemoveConnection()
 		}
 	}
+	if g.timer != nil {
+		g.timer.Stop()
+	}
+	g.emit(gameMessage{
+		MessageType: MessageTypeGameEnd,
+		Dest:        DestAll,
+		Content: mustJSON(map[string]any{
+			"game_now": time.Now().UnixMilli(),
+		}),
+	})
+	close(g.Out)
+	close(g.In)
 	return nil
 }
 
-func (g *Game) GetSnapshotPlayers() map[string]*Player {
+func (g *Game) GetPlayers() map[string]*Player {
 	g.sw.RLock()
 	defer g.sw.RUnlock()
 	snap := make(map[string]*Player, len(g.Players))
@@ -276,7 +249,7 @@ func (g *Game) GetSnapshotPlayers() map[string]*Player {
 func (g *Game) CreatePlayer(input BaseCreatePlayerInput) *Player {
 	// create player
 	p := NewPlayer(CreatePlayerInput{
-		Out: g.Out,
+		Out: g.In,
 		BaseCreatePlayerInput: BaseCreatePlayerInput{
 			Connection: input.Connection,
 			PlayerDetails: PlayerDetails{
@@ -290,27 +263,28 @@ func (g *Game) CreatePlayer(input BaseCreatePlayerInput) *Player {
 	g.Players[p.Id] = p
 	g.sw.Unlock()
 	// alert users on new user joined
-	g.Out <- gameMessage{
+	g.emit(gameMessage{
 		MessageType: MessageTypeUserJoined,
-		Content: toJSON(PlayerDetails{
+		Content: mustJSON(PlayerDetails{
 			Id:   p.Id,
 			Name: p.Name,
 		}),
 		SentFrom: p.Id,
 		Dest:     DestNotSender,
-	}
+	})
 	// decide message type for after creating game
 	messageType := MessageGameCreatedSuccess
 
 	if p.Id != g.OwnerId {
 		messageType = MessageGameConnectSuccess
 	}
-	p.MsgIn <- gameMessage{
+	p.Consume(gameMessage{
 		MessageType: messageType,
 		Content:     g.toGameJSON(),
 		Dest:        p.Id,
 		SentFrom:    SentFromGame,
-	}
+	})
+
 	return p
 }
 
@@ -320,11 +294,22 @@ func (g *Game) RemovePlayer(pId string) {
 	if !found {
 		log.Printf("Player pid=%s coud not be found", pId)
 		g.sw.Unlock()
+		return
 	}
-	close(p.MsgIn)
 	delete(g.Players, pId)
-	p.RemoveConnection()
 	g.sw.Unlock()
+	close(p.MsgIn)
+	p.RemoveConnection()
+}
+
+func (g *Game) emit(msg gameMessage) {
+	select {
+	case g.Out <- msg:
+
+	default:
+		log.Println("Failed to send message to game out")
+	}
+
 }
 
 func (g *Game) answerQuestion(msg gameMessage) {
@@ -333,11 +318,11 @@ func (g *Game) answerQuestion(msg gameMessage) {
 		return
 	}
 	g.sw.RLock()
-	timeDiff := time.Now().UnixMilli() - g.QuestionEndsAt.UnixMilli()
+	timeDiff := time.Until(g.QuestionEndsAt)
 	g.sw.RUnlock()
 
 	if timeDiff <= 0 {
-		p := g.GetSnapshotPlayers()
+		p := g.GetPlayers()
 		player, ok := p[msg.SentFrom]
 		if !ok {
 			return
@@ -345,35 +330,31 @@ func (g *Game) answerQuestion(msg gameMessage) {
 		g.sw.Lock()
 		g.AnsweredPlayers = append(g.AnsweredPlayers, player.Id)
 		g.sw.Unlock()
-		select {
-		case g.Out <- gameMessage{
+
+		g.emit(gameMessage{
 			Dest: DestAll,
-			Content: toJSON(map[string]any{
+			Content: mustJSON(map[string]any{
 				"message": fmt.Sprintf("%s drinks", player.Name),
 			}),
-		}:
-			// 10 second daley
-			time.AfterFunc(20*time.Second, func() {
-				g.Out <- gameMessage{
-					Dest:        DestAll,
-					SentFrom:    "GAME",
-					MessageType: MessageTypeTillNextRound,
-					Content: toJSON(map[string]any{
-						"game_now": time.Now().UnixMilli(),
-						"end":      time.Now().Add(time.Second * 20).UnixMilli(),
-					}),
-				}
-				g.schedule()
+		})
+
+		time.AfterFunc(20*time.Second, func() {
+			g.emit(gameMessage{
+				Dest:        DestAll,
+				SentFrom:    "GAME",
+				MessageType: MessageTypeTillNextRound,
+				Content: mustJSON(map[string]any{
+					"game_now": time.Now().UnixMilli(),
+					"end":      time.Now().Add(time.Second * 20).UnixMilli(),
+				}),
 			})
-		default:
-			log.Println("Failed to send drink message")
-		}
+			g.schedule()
+		})
 
 	}
 }
-
-func (g *Game) read() {
-	for msg := range g.Out {
+func (g *Game) loop() {
+	for msg := range g.In {
 		switch msg.MessageType {
 		case MessageTypeAnswerQuestion:
 			g.answerQuestion(msg)
@@ -384,57 +365,50 @@ func (g *Game) read() {
 		case MessageTypeQuestionComplete:
 			g.schedule()
 		}
+	}
+}
 
-		snap := g.GetSnapshotPlayers()
+func (g *Game) read() {
+	for msg := range g.Out {
+		snap := g.GetPlayers()
 		for _, p := range snap {
 			if msg.Dest == DestNotSender && p.Id == msg.SentFrom {
 				continue
 			}
-			select {
-			case p.MsgIn <- msg:
-			default:
-				log.Printf("drop: MsgIn full for participantId=%s", p.Id)
-
-			}
+			p.Consume(msg)
 		}
 	}
 }
 
-func generateShortCode() (string, error) {
-	maxLen := 4
-	var alphabet = []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
-	l := len(alphabet)
-	var builder strings.Builder
-	builder.Grow(maxLen)
-	for range maxLen {
-		i, err := rand.Int(rand.Reader, big.NewInt(int64(l)))
-		if err != nil {
-			return "", err
-		}
-		builder.WriteRune(alphabet[i.Int64()])
-	}
-	return builder.String(), nil
+type NewGameInput struct {
+	Name      string
+	OwnerId   string
+	Questions []config.Question
 }
 
-func NewGame(name string, ownerId string) *Game {
+func NewGame(input NewGameInput) *Game {
 	code, err := generateShortCode()
 	if err != nil {
 		log.Println("[Game.NewGame]: Failed to generate shortcode")
 	}
 	g := &Game{
-		Id:              uuid.NewString(),
-		Players:         make(map[string]*Player),
-		AnsweredPlayers: make([]string, 0, 10),
-		DateCreated:     time.Now(),
-		CurrentRound:    0,
-		Name:            name,
-		Status:          constants.GAMESTATE_AWAITING_PLAYERS,
-		sw:              sync.RWMutex{},
-		Out:             make(chan gameMessage, 1025),
-		OwnerId:         ownerId,
-		Shortcode:       code,
-		timer:           nil,
+		Id:               uuid.NewString(),
+		Players:          make(map[string]*Player),
+		AnsweredPlayers:  make([]string, 0, 10),
+		DateCreated:      time.Now(),
+		CurrentRound:     0,
+		Name:             input.Name,
+		Status:           constants.GAMESTATE_AWAITING_PLAYERS,
+		sw:               sync.RWMutex{},
+		Out:              make(chan gameMessage, 1025),
+		OwnerId:          input.OwnerId,
+		Shortcode:        code,
+		timer:            nil,
+		loadOnce:         sync.Once{},
+		In:               make(chan gameMessage, 256),
+		RoundQuestionSet: input.Questions,
 	}
 	go g.read()
+	go g.loop()
 	return g
 }

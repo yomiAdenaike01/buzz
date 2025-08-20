@@ -39,6 +39,14 @@ const (
 	pongWait   = 3 * pingPeriod   // tolerate a couple missed pongs (≈90s)
 )
 
+func (p *Player) Consume(msg gameMessage) {
+	select {
+	case p.MsgIn <- msg:
+	default:
+		log.Println("Failed to send message")
+	}
+}
+
 func (p *Player) listen() {
 	c := p.connection
 	c.SetReadDeadline(time.Now().Add(pongWait))

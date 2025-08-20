@@ -15,6 +15,7 @@ const (
 	MessageTypeGameStart        messageType = "START_GAME"
 	MessageTypeAnswerQuestion   messageType = "ANSWER_QUESTION"
 	MessageTypeTillNextRound    messageType = "COUNTDOWN_TO_NEXT_ROUND"
+	MessageTypeGameEnd          messageType = "GAME_END"
 
 	SentFromGame  sentFrom = "GAME"
 	DestAll       dest     = "*"
