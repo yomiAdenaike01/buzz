@@ -25,7 +25,9 @@ func (g *GameService) GetQuestions() []config.Question {
 }
 
 func (g *GameService) CreateGame(input game.NewGameInput) *game.Game {
-	newGame := game.NewGame(input, g.notificationClient)
+	newGame := game.NewGame(input, g.notificationClient, func(gameId string) {
+		g.store.RemoveGame(gameId)
+	})
 	g.store.AddNewGame(newGame)
 	return newGame
 }

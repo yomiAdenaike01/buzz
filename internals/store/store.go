@@ -5,7 +5,6 @@ import (
 	"errors"
 	"log"
 	"sync"
-	"time"
 
 	"github.com/yomiAdenaike01/buzz-core/internals/config"
 	"github.com/yomiAdenaike01/buzz-core/internals/game"
@@ -21,18 +20,16 @@ func (s *Store) GetGameQuestions() []config.Question {
 }
 
 func (s *Store) Shutdown(ctx context.Context) error {
-	c, cancel := context.WithTimeout(ctx, time.Second*10)
 	wg := sync.WaitGroup{}
 	done := make(chan struct{})
 	errs := make(chan error, len(s.ongoingGames))
 	wg.Add(len(s.ongoingGames))
-	defer cancel()
 
 	for _, ongoingGame := range s.ongoingGames {
 		wg.Add(1)
 		go func(og *game.Game) {
 			defer wg.Done()
-			err := og.Stop(c)
+			err := og.Stop()
 			errs <- err
 		}(ongoingGame)
 	}
@@ -53,6 +50,10 @@ func (s *Store) Shutdown(ctx context.Context) error {
 
 func (s *Store) AddNewGame(g *game.Game) {
 	s.ongoingGames[g.Id] = g
+}
+func (s *Store) RemoveGame(id string) {
+	delete(s.ongoingGames, id)
+	log.Printf("Removed game id=%s ongoing games=%d", id, len(s.ongoingGames))
 }
 func (s *Store) FindGameByShortCode(code string) *game.Game {
 	for _, g := range s.ongoingGames {

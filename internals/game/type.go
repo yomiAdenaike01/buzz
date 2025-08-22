@@ -13,6 +13,7 @@ const (
 	MessageTypeUserLeft         messageType = "USER_LEFT"
 	MessageTypeQuestionComplete messageType = "QUESTION_COMPLETE"
 	MessageSubmitVote           messageType = "SUBMIT_VOTE"
+	MessageStopGame             messageType = "STOP_GAME"
 	MessageTypeGameStart        messageType = "START_GAME"
 	MessageTypeAnswerQuestion   messageType = "ANSWER_QUESTION"
 	MessageTypeTillNextRound    messageType = "COUNTDOWN_TO_NEXT_ROUND"

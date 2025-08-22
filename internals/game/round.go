@@ -12,7 +12,6 @@ type Round struct {
 	answeredPlayers   map[string]struct{}
 	order             []string
 	turnIndex         int
-	ownerId           string
 	roundCount        int
 }
 
@@ -45,6 +44,10 @@ func (r *Round) nextQuestion() config.Question {
 		continue
 	}
 	return config.Question{}
+}
+
+func (r *Round) AddPlayer(playerId string) {
+	r.order = append(r.order, playerId)
 }
 
 func NewRound(questionSet []config.Question, order []string, duration time.Duration, ownerId string) *Round {

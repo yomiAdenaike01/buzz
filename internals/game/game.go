@@ -23,20 +23,21 @@ type Game struct {
 	CurrentQuestionId  string             `json:"current_question_id"`
 	RoundQuestionSet   []config.Question  `json:"questions"`
 	AnsweredQuestions  []string
-	AnsweredPlayers    []string              `json:"-"`
-	DateCreated        time.Time             `json:"date_created"`
-	Status             constants.GAME_STATUS `json:"status"`
-	Out                chan gameMessage      `json:"-"`
-	sw                 sync.RWMutex          `json:"-"`
-	OwnerId            string                `json:"owner_id"`
-	Shortcode          string                `json:"shortcode"`
-	timer              *time.Timer           `json:"-"`
-	QuestionEndsAt     time.Time             `json:"-"`
-	loadOnce           sync.Once             `json:"-"`
-	In                 chan gameMessage      `json:"-"`
-	round              *Round                `json:"-"`
-	notificationClient *clients.NotificationClient
-	votingRound        *VotingRound
+	AnsweredPlayers    []string                    `json:"-"`
+	DateCreated        time.Time                   `json:"date_created"`
+	Status             constants.GAME_STATUS       `json:"status"`
+	Out                chan gameMessage            `json:"-"`
+	sw                 sync.RWMutex                `json:"-"`
+	OwnerId            string                      `json:"owner_id"`
+	Shortcode          string                      `json:"shortcode"`
+	timer              *time.Timer                 `json:"-"`
+	QuestionEndsAt     time.Time                   `json:"-"`
+	loadOnce           sync.Once                   `json:"-"`
+	In                 chan gameMessage            `json:"-"`
+	round              *Round                      `json:"-"`
+	notificationClient *clients.NotificationClient `json:"-"`
+	votingRound        *VotingRound                `json:"-"`
+	OnStopGame         func(gameId string)         `json:"-"`
 }
 
 type NewGameInput struct {
@@ -60,6 +61,57 @@ type GamePayload struct {
 func mustJSON(data any) string {
 	d, _ := json.Marshal(data)
 	return string(d)
+}
+
+func (g *Game) Stop() error {
+	log.Println("[Game.Stop]: Stopping game")
+	baseCtx := context.Background()
+	ctxTimeout, cancel := context.WithTimeout(baseCtx, time.Second*3)
+	defer cancel()
+
+	g.sw.Lock()
+	if g.Status == constants.GAMESTATUS_ENDED {
+		g.sw.Unlock()
+		return nil
+	}
+	g.Status = constants.GAMESTATUS_ENDED
+
+	t := g.timer
+	if t != nil {
+		t.Stop()
+	}
+	g.timer = nil
+	g.sw.Unlock()
+
+	g.CurrentQuestionId = ""
+	g.OwnerId = ""
+
+	if g.Out != nil {
+		close(g.Out)
+		g.Out = nil
+	}
+
+	// sever all connections
+	players := g.GetPlayers()
+	for _, player := range players {
+		go func(p *Player) {
+			log.Println("[Game.Stop]: Removing player connection")
+			p.RemoveConnection()
+		}(player)
+		delete(g.Players, player.Id)
+	}
+
+	g.Players = nil
+	if g.In != nil {
+		close(g.In)
+		g.In = nil
+	}
+
+	if ctxTimeout.Err() != nil {
+		log.Println("Failed stop game in time")
+	}
+	g.OnStopGame(g.Id)
+	return nil
 }
 
 func (g *Game) toPlayersPayload() []PlayerDetails {
@@ -218,31 +270,6 @@ func (g *Game) changeAndBroadcastGameState(status constants.GAME_STATUS) {
 
 }
 
-func (g *Game) Stop(ctx context.Context) error {
-	players := g.GetPlayers()
-	for _, p := range players {
-		select {
-		case <-ctx.Done():
-			log.Printf("Failed to stop err=%s", ctx.Err())
-		default:
-			p.RemoveConnection()
-		}
-	}
-	if g.timer != nil {
-		g.timer.Stop()
-	}
-	g.emit(gameMessage{
-		MessageType: MessageTypeGameEnd,
-		Dest:        DestAll,
-		Content: mustJSON(map[string]any{
-			"game_now": time.Now().UnixMilli(),
-		}),
-	})
-	close(g.Out)
-	close(g.In)
-	return nil
-}
-
 func (g *Game) GetPlayers() map[string]*Player {
 	g.sw.RLock()
 	defer g.sw.RUnlock()
@@ -267,11 +294,19 @@ func (g *Game) CreatePlayer(input BaseCreatePlayerInput) *Player {
 	g.sw.Lock()
 	g.Players[p.Id] = p
 	g.sw.Unlock()
-	// alert users on new user joined
-	g.emitNewPlayerJoined(PlayerDetails{
-		Id:   p.Id,
-		Name: p.Name,
-	})
+
+	if g.round != nil {
+		g.round.AddPlayer(p.Id)
+
+	}
+
+	if p.Id != g.OwnerId {
+		// alert users on new user joined
+		g.emitNewPlayerJoined(PlayerDetails{
+			Id:   p.Id,
+			Name: p.Name,
+		})
+	}
 
 	// decide message type for after creating game
 	messageType := MessageGameCreatedSuccess
@@ -293,7 +328,7 @@ func (g *Game) RemovePlayer(pId string) {
 	g.sw.Lock()
 	p, found := g.Players[pId]
 	if !found {
-		log.Printf("Player pid=%s coud not be found", pId)
+		log.Printf("Player pid=%s could not be found", pId)
 		g.sw.Unlock()
 		return
 	}
@@ -376,6 +411,7 @@ func (g *Game) answerQuestion(msg gameMessage) {
 
 	}
 }
+
 func (g *Game) submitVote(vote string) {
 	var playerVote Vote
 	if err := json.Unmarshal([]byte(vote), &playerVote); err != nil {
@@ -402,6 +438,8 @@ func (g *Game) loop() {
 			g.schedule()
 		case MessageSubmitVote:
 			g.submitVote(msg.Content)
+		case MessageStopGame:
+			g.Stop()
 		}
 	}
 }
@@ -418,7 +456,7 @@ func (g *Game) read() {
 	}
 }
 
-func NewGame(input NewGameInput, notificationClient *clients.NotificationClient) *Game {
+func NewGame(input NewGameInput, notificationClient *clients.NotificationClient, onStopGame func(gameId string)) *Game {
 	code, err := generateShortCode()
 	if err != nil {
 		log.Println("[Game.NewGame]: Failed to generate shortcode")
@@ -441,6 +479,7 @@ func NewGame(input NewGameInput, notificationClient *clients.NotificationClient)
 		RoundQuestionSet:   input.Questions,
 		notificationClient: notificationClient,
 		votingRound:        nil,
+		OnStopGame:         onStopGame,
 	}
 	go g.read()
 	go g.loop()

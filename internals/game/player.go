@@ -2,7 +2,6 @@ package game
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"sync"
 	"time"
@@ -33,6 +32,7 @@ type Player struct {
 	once       sync.Once          `json:"-"`
 	sw         sync.Mutex         `json:"-"`
 	Name       string             `json:"name"`
+	ticker     *time.Ticker       `json:"-"`
 }
 
 const (
@@ -92,37 +92,31 @@ func (p *Player) listen() {
 func (p *Player) RemoveConnection() {
 	p.once.Do(func() {
 		log.Printf("Attempting to remove connection for participantId=%s", p.Id)
-		select {
-		case p.MsgOut <- gameMessage{
-			SentFrom:    p.Id,
-			MessageType: MessageTypeUserLeft,
-			Dest:        DestNotSender,
-			Content:     fmt.Sprintf("User %s has left", p.Id),
-		}:
-		default:
+		if p.ticker != nil {
+			p.ticker.Stop()
+			p.ticker = nil
 		}
-		if p == nil {
-			return
-		}
+		p.sw.Lock()
 		c := p.connection
+		p.connection = nil
+		p.sw.Unlock()
 		if c == nil {
 			return
 		}
 		msg := websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Normal closure")
-		p.sw.Lock()
 		c.WriteControl(
 			websocket.CloseMessage,
 			msg,
 			time.Now().Add(writeWait),
 		)
 		c.Close()
-		p.sw.Unlock()
 	})
 
 }
 
 func (p *Player) write() {
 	t := time.NewTicker(pingPeriod)
+	p.ticker = t
 	defer func() {
 		t.Stop()
 		if p.connection != nil {
@@ -160,6 +154,7 @@ func (p *Player) write() {
 				time.Now().Add(writeWait),
 			); err != nil {
 				p.RemoveConnection()
+				t.Stop()
 			}
 			log.Printf("Sending ping to participant pid=%s", p.Id)
 		}
