@@ -5,6 +5,7 @@ dist/
 *.exe
 *.test
 *.out
+*.env
 
 # If you're NOT using vendoring:
 vendor/
