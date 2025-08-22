@@ -7,21 +7,36 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"path/filepath"
+	"runtime"
 	"time"
 
-	"github.com/yomiAdenaike01/buzz-core/internals/clients"
+	"github.com/joho/godotenv"
+	"github.com/yomiAdenaike01/buzz-core/internals/config"
 	"github.com/yomiAdenaike01/buzz-core/internals/handlers"
+	serviceClients "github.com/yomiAdenaike01/buzz-core/internals/service-clients"
 	"github.com/yomiAdenaike01/buzz-core/internals/services"
 	"github.com/yomiAdenaike01/buzz-core/internals/store"
 )
 
 func main() {
+	_, b, _, _ := runtime.Caller(0)
+	basePath := filepath.Join(filepath.Dir(b), "..") // adjust if this file is deep in /internals
+
+	envPath := filepath.Join(basePath, ".env")
+	err := godotenv.Load(envPath)
+	if err != nil {
+		log.Println("No .env file found, falling back to OS env vars")
+		return
+	}
+	appConfig := config.NewConfig()
 	m := http.NewServeMux()
 	port := ":9080"
 
 	appStore := store.NewStore()
-	notificationClient := clients.NewNotificationClient()
-	gameService := services.NewGameService(appStore, notificationClient)
+	clients := serviceClients.New(appConfig, appStore)
+	gameService := services.NewGameService(appStore, clients)
+	go clients.BuildChallengesFromPosts(appStore)
 	h := handlers.NewHandlers(gameService)
 
 	m.HandleFunc("POST /create-game", h.HandleCreateGame)

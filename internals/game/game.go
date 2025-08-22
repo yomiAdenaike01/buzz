@@ -10,34 +10,34 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/yomiAdenaike01/buzz-core/internals/clients"
 	"github.com/yomiAdenaike01/buzz-core/internals/config"
 	"github.com/yomiAdenaike01/buzz-core/internals/constants"
+	"github.com/yomiAdenaike01/buzz-core/internals/utils"
 )
 
 type Game struct {
-	Name               string             `json:"name"`
-	Id                 string             `json:"id"`
-	Players            map[string]*Player `json:"players"`
-	CurrentRound       int                `json:"current_round"`
-	CurrentQuestionId  string             `json:"current_question_id"`
-	RoundQuestionSet   []config.Question  `json:"questions"`
-	AnsweredQuestions  []string
-	AnsweredPlayers    []string                    `json:"-"`
-	DateCreated        time.Time                   `json:"date_created"`
-	Status             constants.GAME_STATUS       `json:"status"`
-	Out                chan gameMessage            `json:"-"`
-	sw                 sync.RWMutex                `json:"-"`
-	OwnerId            string                      `json:"owner_id"`
-	Shortcode          string                      `json:"shortcode"`
-	timer              *time.Timer                 `json:"-"`
-	QuestionEndsAt     time.Time                   `json:"-"`
-	loadOnce           sync.Once                   `json:"-"`
-	In                 chan gameMessage            `json:"-"`
-	round              *Round                      `json:"-"`
-	notificationClient *clients.NotificationClient `json:"-"`
-	votingRound        *VotingRound                `json:"-"`
-	OnStopGame         func(gameId string)         `json:"-"`
+	Name              string             `json:"name"`
+	Id                string             `json:"id"`
+	Players           map[string]*Player `json:"players"`
+	CurrentRound      int                `json:"current_round"`
+	CurrentQuestionId string             `json:"current_question_id"`
+	RoundQuestionSet  []config.Question  `json:"questions"`
+	AnsweredQuestions []string
+	AnsweredPlayers   []string               `json:"-"`
+	DateCreated       time.Time              `json:"date_created"`
+	Status            constants.GAME_STATUS  `json:"status"`
+	Out               chan gameMessage       `json:"-"`
+	sw                sync.RWMutex           `json:"-"`
+	OwnerId           string                 `json:"owner_id"`
+	Shortcode         string                 `json:"shortcode"`
+	timer             *time.Timer            `json:"-"`
+	QuestionEndsAt    time.Time              `json:"-"`
+	loadOnce          sync.Once              `json:"-"`
+	In                chan gameMessage       `json:"-"`
+	round             *Round                 `json:"-"`
+	votingRound       *VotingRound           `json:"-"`
+	OnStopGame        func(gameId string)    `json:"-"`
+	notifications     chan map[string]string `json:"-"`
 }
 
 type NewGameInput struct {
@@ -58,9 +58,8 @@ type GamePayload struct {
 	Shortcode       string                `json:"short_code"`
 }
 
-func mustJSON(data any) string {
-	d, _ := json.Marshal(data)
-	return string(d)
+func (g *Game) OnNotification() <-chan map[string]string {
+	return g.notifications
 }
 
 func (g *Game) Stop() error {
@@ -102,6 +101,9 @@ func (g *Game) Stop() error {
 	}
 
 	g.Players = nil
+	if g.notifications != nil {
+		close(g.notifications)
+	}
 	if g.In != nil {
 		close(g.In)
 		g.In = nil
@@ -208,7 +210,7 @@ func (g *Game) maybeStartVotingRound(question config.Question) bool {
 func (g *Game) emitVotingResult(votingRound *VotingRound) {
 	result := votingRound.Result()
 	g.emit(gameMessage{
-		Content:     mustJSON(result),
+		Content:     utils.MustJSON(result),
 		MessageType: MessageTypeVoteResult,
 		Dest:        DestAll,
 		SentFrom:    "GAME",
@@ -220,7 +222,7 @@ func (g *Game) emitQuestion(askerId string, question config.Question) {
 		SentFrom:    SentFromGame,
 		Dest:        DestAll,
 		MessageType: MessageTypeGameAskQuestion,
-		Content: mustJSON(map[string]any{
+		Content: utils.MustJSON(map[string]any{
 			"player_id":      askerId,
 			"question":       question,
 			"ends_at_ms":     g.QuestionEndsAt.UnixMilli(),
@@ -261,7 +263,7 @@ func (g *Game) changeAndBroadcastGameState(status constants.GAME_STATUS) {
 	g.sw.Unlock()
 	g.emit(gameMessage{
 		SentFrom: g.OwnerId,
-		Content: mustJSON(map[string]string{
+		Content: utils.MustJSON(map[string]string{
 			"status": status,
 		}),
 		Dest:        DestAll,
@@ -338,24 +340,25 @@ func (g *Game) RemovePlayer(pId string) {
 	p.RemoveConnection()
 }
 
-func (g *Game) sendNotification(notificationContent clients.NotificationContent) {
-	err := g.notificationClient.SendNotification(notificationContent)
-	if err != nil {
-		log.Printf("[Game.emitNewPlayerJoined] Failed to send notification to %s", notificationContent.To)
-	}
+func (g *Game) sendNotification(notificationContent map[string]string) {
+	g.notifications <- notificationContent
+	// err := g.notificationClient.SendNotification(notificationContent)
+	// if err != nil {
+	// 	log.Printf("[Game.emitNewPlayerJoined] Failed to send notification to %s", notificationContent.To)
+	// }
 }
 
 func (g *Game) emitNewPlayerJoined(newPlayerDetails PlayerDetails) {
 	g.emit(gameMessage{
 		MessageType: MessageTypeUserJoined,
-		Content:     mustJSON(newPlayerDetails),
+		Content:     utils.MustJSON(newPlayerDetails),
 		SentFrom:    newPlayerDetails.Id,
 		Dest:        DestNotSender,
 	})
-	g.sendNotification(clients.NotificationContent{
-		Message: fmt.Sprintf("%s has joined %s", newPlayerDetails.Name, g.Name),
-		Title:   "New player joined",
-		To:      g.OwnerId,
+	g.sendNotification(map[string]string{
+		"Message": fmt.Sprintf("%s has joined %s", newPlayerDetails.Name, g.Name),
+		"Title":   "New player joined",
+		"To":      g.OwnerId,
 	})
 }
 
@@ -391,7 +394,7 @@ func (g *Game) answerQuestion(msg gameMessage) {
 
 		g.emit(gameMessage{
 			Dest: DestAll,
-			Content: mustJSON(map[string]any{
+			Content: utils.MustJSON(map[string]any{
 				"message": fmt.Sprintf("%s drinks", player.Name),
 			}),
 		})
@@ -401,7 +404,7 @@ func (g *Game) answerQuestion(msg gameMessage) {
 				Dest:        DestAll,
 				SentFrom:    "GAME",
 				MessageType: MessageTypeTillNextRound,
-				Content: mustJSON(map[string]any{
+				Content: utils.MustJSON(map[string]any{
 					"game_now": time.Now().UnixMilli(),
 					"end":      time.Now().Add(time.Second * 20).UnixMilli(),
 				}),
@@ -456,30 +459,30 @@ func (g *Game) read() {
 	}
 }
 
-func NewGame(input NewGameInput, notificationClient *clients.NotificationClient, onStopGame func(gameId string)) *Game {
+func NewGame(input NewGameInput, notificationChannel chan map[string]string, onStopGame func(gameId string)) *Game {
 	code, err := generateShortCode()
 	if err != nil {
 		log.Println("[Game.NewGame]: Failed to generate shortcode")
 	}
 	g := &Game{
-		Id:                 uuid.NewString(),
-		Players:            make(map[string]*Player),
-		AnsweredPlayers:    make([]string, 0, 10),
-		DateCreated:        time.Now(),
-		CurrentRound:       0,
-		Name:               input.Name,
-		Status:             constants.GAMESTATE_AWAITING_PLAYERS,
-		sw:                 sync.RWMutex{},
-		Out:                make(chan gameMessage, 1025),
-		OwnerId:            input.OwnerId,
-		Shortcode:          code,
-		timer:              nil,
-		loadOnce:           sync.Once{},
-		In:                 make(chan gameMessage, 256),
-		RoundQuestionSet:   input.Questions,
-		notificationClient: notificationClient,
-		votingRound:        nil,
-		OnStopGame:         onStopGame,
+		Id:               uuid.NewString(),
+		Players:          make(map[string]*Player),
+		AnsweredPlayers:  make([]string, 0, 10),
+		DateCreated:      time.Now(),
+		CurrentRound:     0,
+		Name:             input.Name,
+		Status:           constants.GAMESTATE_AWAITING_PLAYERS,
+		sw:               sync.RWMutex{},
+		Out:              make(chan gameMessage, 1025),
+		OwnerId:          input.OwnerId,
+		Shortcode:        code,
+		timer:            nil,
+		loadOnce:         sync.Once{},
+		In:               make(chan gameMessage, 256),
+		RoundQuestionSet: input.Questions,
+		votingRound:      nil,
+		OnStopGame:       onStopGame,
+		notifications:    notificationChannel,
 	}
 	go g.read()
 	go g.loop()

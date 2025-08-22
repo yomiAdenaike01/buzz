@@ -19,6 +19,10 @@ func (s *Store) GetGameQuestions() []config.Question {
 	return s.questionsSet
 }
 
+func (s *Store) AppendQuestions(newQuestions []config.Question) {
+	s.questionsSet = append(s.questionsSet, newQuestions...)
+}
+
 func (s *Store) Shutdown(ctx context.Context) error {
 	wg := sync.WaitGroup{}
 	done := make(chan struct{})

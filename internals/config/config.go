@@ -3,6 +3,7 @@ package config
 import (
 	"embed"
 	"encoding/json"
+	"os"
 )
 
 //go:embed questions_by_category.json
@@ -12,6 +13,21 @@ type Question struct {
 	Id       string `json:"id"`
 	Text     string `json:"text"`
 	Category string `json:"category"`
+	Metadata string `json:"metadata"`
+}
+
+type AppConfig struct {
+	CLOUD_FLARE_ACCOUNT_ID string
+	CLOUD_FLARE_AI_MODEL   string
+	CLOUD_FLARE_API_TOKEN  string
+}
+
+func NewConfig() AppConfig {
+	return AppConfig{
+		CLOUD_FLARE_ACCOUNT_ID: os.Getenv("CT_ACCOUNT_ID"),
+		CLOUD_FLARE_AI_MODEL:   os.Getenv("CT_AI_MODEL"),
+		CLOUD_FLARE_API_TOKEN:  os.Getenv("CT_API_TOKEN"),
+	}
 }
 
 func LoadDeck() (*map[string][]Question, error) {

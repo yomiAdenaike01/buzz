@@ -1,4 +1,4 @@
-package clients
+package serviceClients
 
 import (
 	"bytes"
@@ -58,7 +58,7 @@ func (n *NotificationClient) SendNotification(body NotificationContent) error {
 	return nil
 }
 
-func NewNotificationClient() *NotificationClient {
+func newNotificationClient() *NotificationClient {
 	return &NotificationClient{
 		baseUrl: "https://exp.host/--/api/v2/push/send",
 	}

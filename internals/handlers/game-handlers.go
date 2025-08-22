@@ -13,6 +13,7 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/yomiAdenaike01/buzz-core/internals/game"
 	"github.com/yomiAdenaike01/buzz-core/internals/responses"
+	serviceClients "github.com/yomiAdenaike01/buzz-core/internals/service-clients"
 	"github.com/yomiAdenaike01/buzz-core/internals/services"
 )
 
@@ -25,7 +26,9 @@ type ConnectState struct {
 }
 
 type Handlers struct {
-	gameService *services.GameService
+	gameService         *services.GameService
+	notificationClient  *serviceClients.NotificationClient
+	notificationChannel chan serviceClients.NotificationContent
 }
 
 var u = websocket.Upgrader{
@@ -112,6 +115,11 @@ func (h *Handlers) HandleConnectToGame(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handlers) HandleCreateGame(w http.ResponseWriter, r *http.Request) {
 	log.Println("[handlers.HandleCreateGame] Attempting to create game...")
+	// posts, err := h.gameService.GetRedditPosts()
+	// if err != nil {
+	// 	log.Printf("Failed to get reddit posts err=%s", err.Error())
+	// }
+	// log.Printf("Posts =%v", posts)
 
 	d, err := io.ReadAll(r.Body)
 	if err != nil {
