@@ -1,9 +1,13 @@
 package store
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"errors"
 	"log"
+	"os"
+	"path/filepath"
 	"sync"
 
 	"github.com/yomiAdenaike01/buzz-core/internals/config"
@@ -13,10 +17,48 @@ import (
 type Store struct {
 	ongoingGames map[string]*game.Game
 	questionsSet []config.Question
+	config       config.AppConfig
 }
 
 func (s *Store) GetGameQuestions() []config.Question {
 	return s.questionsSet
+}
+func (s *Store) GetOnGoingGames() map[string]*game.Game {
+	return s.ongoingGames
+}
+func (s *Store) LoadRemoteChallengesFromFile() bool {
+	configFilePath := s.config.GetConfigFilePath("posts.json")
+	log.Printf("[LoadRemoteChallengesFromFile] Loading content from %s", configFilePath)
+	_, err := os.Stat(configFilePath)
+	if err != nil && errors.Is(err, os.ErrExist) {
+		log.Println("[LoadRemoteChallengesFromFile]: File doesn't exist")
+		return false
+	}
+	f, err := os.ReadFile(configFilePath)
+	if err != nil {
+		return false
+	}
+	var configQuestions []config.Question
+	if err := json.NewDecoder(bytes.NewBuffer(f)).Decode(&configQuestions); err != nil {
+		return false
+	}
+	s.AppendQuestions(configQuestions)
+	return true
+}
+
+func (s *Store) SaveFetchedChallenges(questions []config.Question) error {
+	configDir := s.config.GetConfigDir()
+	savePath := filepath.Clean(filepath.Join(*configDir, "posts.json"))
+	saveData, err := json.Marshal(questions)
+	if err != nil {
+		log.Printf("Failed to save data, err=%s", err.Error())
+	}
+	err = os.WriteFile(savePath, saveData, 0o600)
+	if err != nil {
+		log.Printf("Failed to save file err=%s", err.Error())
+		return err
+	}
+	return err
 }
 
 func (s *Store) AppendQuestions(newQuestions []config.Question) {
@@ -75,13 +117,14 @@ func (s *Store) FindGameById(id string) *game.Game {
 	return nil
 }
 
-func NewStore() *Store {
+func NewStore(config config.AppConfig) *Store {
 	questions, err := loadChallenges()
 	if err != nil {
 		log.Printf("Failed to load challenges err=%v", err)
 		return nil
 	}
 	return &Store{
+		config:       config,
 		questionsSet: *questions,
 		ongoingGames: map[string]*game.Game{},
 	}

@@ -22,7 +22,6 @@ import (
 func main() {
 	_, b, _, _ := runtime.Caller(0)
 	basePath := filepath.Join(filepath.Dir(b), "..") // adjust if this file is deep in /internals
-
 	envPath := filepath.Join(basePath, ".env")
 	err := godotenv.Load(envPath)
 	if err != nil {
@@ -33,7 +32,7 @@ func main() {
 	m := http.NewServeMux()
 	port := ":9080"
 
-	appStore := store.NewStore()
+	appStore := store.NewStore(appConfig)
 	clients := serviceClients.New(appConfig, appStore)
 	gameService := services.NewGameService(appStore, clients)
 	go clients.BuildChallengesFromPosts(appStore)

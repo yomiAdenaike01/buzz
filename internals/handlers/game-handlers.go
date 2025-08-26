@@ -134,9 +134,8 @@ func (h *Handlers) HandleCreateGame(w http.ResponseWriter, r *http.Request) {
 	log.Printf("[handlers.HandleCreateGame] Creating game name=%s", createGameInput.Name)
 	playerId := uuid.NewString()
 	gameInstance := h.gameService.CreateGame(game.NewGameInput{
-		Name:      createGameInput.Name,
-		OwnerId:   playerId,
-		Questions: h.gameService.GetQuestions(),
+		Name:    createGameInput.Name,
+		OwnerId: playerId,
 	})
 	responses.WriteJSON(w, map[string]any{
 		"id":  gameInstance.Id,

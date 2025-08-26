@@ -75,7 +75,7 @@ Do not include explanations, markdown, or any other text.`,
 			if summary.Text == "" {
 				return
 			}
-			summary.Url = p.Permalink
+			summary.Url = fmt.Sprintf("https://reddit.com%s", p.Permalink)
 			summariesChan <- summary
 		}(post)
 	}
@@ -117,7 +117,7 @@ type APIResponse struct {
 }
 
 func (a *AIHttpClient) Summarise(instruction []byte) (SummariseResult, error) {
-	log.Printf("[Summarise] Summarising from instruction=%s", string(instruction))
+	log.Printf("[Summarise] Summarising from instruction")
 	var result SummariseResult
 	url := &url.URL{
 		Scheme: "https",
@@ -125,14 +125,14 @@ func (a *AIHttpClient) Summarise(instruction []byte) (SummariseResult, error) {
 		Path:   fmt.Sprintf("/client/v4/accounts/%s/ai/run/%s", a.config.CLOUD_FLARE_ACCOUNT_ID, a.config.CLOUD_FLARE_AI_MODEL),
 	}
 	request, err := http.NewRequest("POST", url.String(), bytes.NewReader(instruction))
-	request.Header.Add("Authorization", fmt.Sprintf("Bearer %s", a.config.CLOUD_FLARE_API_TOKEN))
 	if err != nil {
-		return result, nil
+		return result, fmt.Errorf("failed to build request=%w", err)
 	}
+	request.Header.Add("Authorization", fmt.Sprintf("Bearer %s", a.config.CLOUD_FLARE_API_TOKEN))
+
 	response, err := http.DefaultClient.Do(request)
-	if err != nil || response.StatusCode != http.StatusOK {
-		log.Printf("[Summarise] Failed to send request to %s", url.String())
-		return result, fmt.Errorf("failed to send request err=%s", err.Error())
+	if err != nil {
+		return result, fmt.Errorf("failed to send request err=%w", err)
 	}
 	defer response.Body.Close()
 	var apiResp APIResponse

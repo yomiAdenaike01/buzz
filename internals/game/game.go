@@ -84,7 +84,8 @@ func (g *Game) Stop() error {
 
 	g.CurrentQuestionId = ""
 	g.OwnerId = ""
-
+	g.round = nil
+	g.RoundQuestionSet = nil
 	if g.Out != nil {
 		close(g.Out)
 		g.Out = nil
@@ -101,9 +102,6 @@ func (g *Game) Stop() error {
 	}
 
 	g.Players = nil
-	if g.notifications != nil {
-		close(g.notifications)
-	}
 	if g.In != nil {
 		close(g.In)
 		g.In = nil
@@ -182,7 +180,7 @@ func (g *Game) stopTimer() {
 }
 
 func (g *Game) maybeStartVotingRound(question config.Question) bool {
-	if question.Category != "Most Likely To" {
+	if question.Category != "Most Likely To" || question.Category != "AITA" {
 		return false
 	}
 	log.Println("[Game.maybeStartVotingRound]: Starting voting round")
@@ -247,8 +245,8 @@ func (g *Game) schedule() {
 func (g *Game) startNewRound() {
 	order := g.getPlayerOrder()
 	g.sw.Lock()
+	defer g.sw.Unlock()
 	g.round = NewRound(g.RoundQuestionSet, order, time.Second*30, g.OwnerId)
-	g.sw.Unlock()
 }
 
 func (g *Game) start() {

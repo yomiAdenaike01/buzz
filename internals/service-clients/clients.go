@@ -17,14 +17,24 @@ type ServiceClients struct {
 }
 
 func (s *ServiceClients) BuildChallengesFromPosts(store *store.Store) {
+	log.Println("[BuildChallengesFromPosts]: Loading challenges from file")
+	loaded := store.LoadRemoteChallengesFromFile()
+	if loaded {
+		return
+	}
 	log.Println("[BuildChallengesFromPosts] Starting to build challenges from reddit")
-	posts, err := s.Reddit.GetPopularSubredditPosts("AmItheAsshole", 30)
+	posts, err := s.Reddit.GetPopularSubredditPosts("AmItheAsshole", 5)
 	if err != nil {
 		log.Printf("[BuildChallengesFromPosts] Failed to load challenges err=%s", err.Error())
+		return
 	}
+
 	summaries, errors := s.Ai.SummarisePosts(posts)
 	for _, e := range errors {
 		log.Printf("[BuildChallengesFromPosts] Failed to summarise err=%s", e.Error())
+	}
+	if len(errors) > 0 {
+		return
 	}
 	questions := make([]config.Question, 0, len(summaries))
 	for _, summary := range summaries {
@@ -39,7 +49,7 @@ func (s *ServiceClients) BuildChallengesFromPosts(store *store.Store) {
 		})
 	}
 
-	store.AppendQuestions(questions)
+	store.SaveFetchedChallenges(questions)
 
 }
 
