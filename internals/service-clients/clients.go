@@ -50,7 +50,6 @@ func (s *ServiceClients) BuildChallengesFromPosts(store *store.Store) {
 	}
 
 	store.SaveFetchedChallenges(questions)
-
 }
 
 func New(config config.AppConfig, store *store.Store) *ServiceClients {

@@ -42,17 +42,17 @@ const (
 )
 
 func (p *Player) Consume(msg gameMessage) bool {
+	timer := time.NewTimer(constants.MAX_EMIT_TIMEOUT)
+	defer timer.Stop()
 	select {
-	case p.MsgIn <- msg:
-	case <-time.After(constants.MAX_EMIT_TIMEOUT):
+	case <-timer.C:
 		// might be slow consider dropping
 		log.Println("[Player.Consume]: Failed to send message in duration, dropping player")
 		p.RemoveConnection()
 		return false
-	default:
-		log.Println("Failed to send message")
+	case p.MsgIn <- msg:
+		return true
 	}
-	return true
 }
 
 func (p *Player) listen() {

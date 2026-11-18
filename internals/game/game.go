@@ -169,7 +169,9 @@ func (g *Game) askQuestion() {
 		// round complete
 		return
 	}
-	g.maybeStartVotingRound(question)
+	if question.CanVote() {
+		g.maybeStartVotingRound(question)
+	}
 	g.emitQuestion(askerId, question)
 }
 
@@ -180,9 +182,6 @@ func (g *Game) stopTimer() {
 }
 
 func (g *Game) maybeStartVotingRound(question config.Question) bool {
-	if question.Category != "Most Likely To" || question.Category != "AITA" {
-		return false
-	}
 	log.Println("[Game.maybeStartVotingRound]: Starting voting round")
 	numPlayers := len(g.GetPlayers())
 	vr := NewVotingRound(question.Text, numPlayers)
@@ -206,9 +205,8 @@ func (g *Game) maybeStartVotingRound(question config.Question) bool {
 }
 
 func (g *Game) emitVotingResult(votingRound *VotingRound) {
-	result := votingRound.Result()
 	g.emit(gameMessage{
-		Content:     utils.MustJSON(result),
+		Content:     utils.MustJSON(votingRound.Result()),
 		MessageType: MessageTypeVoteResult,
 		Dest:        DestAll,
 		SentFrom:    "GAME",
@@ -353,6 +351,7 @@ func (g *Game) emitNewPlayerJoined(newPlayerDetails PlayerDetails) {
 		SentFrom:    newPlayerDetails.Id,
 		Dest:        DestNotSender,
 	})
+
 	g.sendNotification(map[string]string{
 		"Message": fmt.Sprintf("%s has joined %s", newPlayerDetails.Name, g.Name),
 		"Title":   "New player joined",

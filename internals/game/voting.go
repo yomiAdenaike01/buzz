@@ -1,24 +1,26 @@
 package game
 
-import "sync"
+import (
+	"sync"
+)
 
 type Vote struct {
 	VoterID   string `json:"voter_id"`
 	Candidate string `json:"candidate"`
-	Tie       bool   `json:"-"`
 }
 
 type VotingRound struct {
 	votes        []Vote
 	done         chan struct{}
 	once         sync.Once
-	sw           sync.Mutex
+	sw           sync.RWMutex
 	expcetedSize int
 }
 
 type VotingResult struct {
 	WinnerId      string         `json:"winner"`
 	VotesByPlayer map[string]int `json:"votes"`
+	TiedPlayers   []string       `json:"tied"`
 }
 
 func (v *VotingRound) Done() <-chan struct{} {
@@ -33,32 +35,33 @@ func (v *VotingRound) Complete() {
 	v.sw.Unlock()
 }
 
-func (v *VotingRound) Result() VotingResult {
-	result := VotingResult{
-		WinnerId:      "",
-		VotesByPlayer: make(map[string]int, v.expcetedSize),
-	}
-	v.sw.Lock()
-	for _, vote := range v.votes {
-		candidate := vote.Candidate
-		_, ok := result.VotesByPlayer[candidate]
-		if !ok {
-			result.VotesByPlayer[candidate] = 0
-		}
-		result.VotesByPlayer[candidate] = result.VotesByPlayer[candidate] + 1
-	}
-	v.sw.Unlock()
-	max := 0
-	for k, v := range result.VotesByPlayer {
-		if v > max {
-			result.WinnerId = k
-			max = v
-		}
-		if max == v && v > 0 {
+func (v *VotingRound) Result() (result VotingResult) {
+	v.sw.RLock()
+	defer v.sw.RUnlock()
+	result.VotesByPlayer = make(map[string]int, v.expcetedSize)
 
+	maxVotes := 0
+	for _, vote := range v.votes {
+		currentVoteCount := result.VotesByPlayer[vote.Candidate]
+		newVoteCount := currentVoteCount + 1
+		result.VotesByPlayer[vote.Candidate] = newVoteCount
+
+		if newVoteCount > maxVotes {
+			maxVotes = newVoteCount
+			result.WinnerId = vote.Candidate
+			result.TiedPlayers = nil
+			continue
 		}
+
+		if newVoteCount == maxVotes {
+			result.TiedPlayers = append(result.TiedPlayers, vote.Candidate)
+		}
+
 	}
-	return result
+	if len(result.TiedPlayers) > 0 {
+		result.WinnerId = ""
+	}
+	return
 }
 
 func (v *VotingRound) SubmitVote(vote Vote) {
@@ -74,6 +77,6 @@ func NewVotingRound(questionText string, numPlayers int) *VotingRound {
 		done:         make(chan struct{}),
 		expcetedSize: numPlayers,
 		once:         sync.Once{},
-		sw:           sync.Mutex{},
+		sw:           sync.RWMutex{},
 	}
 }

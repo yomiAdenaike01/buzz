@@ -4,10 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
-	"net/url"
 	"strings"
 	"sync"
 
@@ -116,15 +114,16 @@ type APIResponse struct {
 	Messages []string `json:"messages"`
 }
 
+func (a *AIHttpClient) getEndpoint() string {
+	endpoint := fmt.Sprintf("/client/v4/accounts/%s/ai/run/%s", a.config.CLOUD_FLARE_ACCOUNT_ID, a.config.CLOUD_FLARE_AI_MODEL)
+	return fmt.Sprintf("https://api.cloudflare.com%s", endpoint)
+}
+
 func (a *AIHttpClient) Summarise(instruction []byte) (SummariseResult, error) {
 	log.Printf("[Summarise] Summarising from instruction")
 	var result SummariseResult
-	url := &url.URL{
-		Scheme: "https",
-		Host:   "api.cloudflare.com",
-		Path:   fmt.Sprintf("/client/v4/accounts/%s/ai/run/%s", a.config.CLOUD_FLARE_ACCOUNT_ID, a.config.CLOUD_FLARE_AI_MODEL),
-	}
-	request, err := http.NewRequest("POST", url.String(), bytes.NewReader(instruction))
+
+	request, err := http.NewRequest("POST", a.getEndpoint(), bytes.NewReader(instruction))
 	if err != nil {
 		return result, fmt.Errorf("failed to build request=%w", err)
 	}
@@ -135,14 +134,10 @@ func (a *AIHttpClient) Summarise(instruction []byte) (SummariseResult, error) {
 		return result, fmt.Errorf("failed to send request err=%w", err)
 	}
 	defer response.Body.Close()
-	var apiResp APIResponse
-	body, err := io.ReadAll(response.Body)
-	if err != nil {
-		return result, err
-	}
 
-	if err := json.Unmarshal(body, &apiResp); err != nil {
-		log.Printf("failed to unmarshal outer: err=%s", err.Error())
+	var apiResp APIResponse
+
+	if err := json.NewDecoder(response.Body).Decode(&apiResp); err != nil {
 		return result, err
 	}
 

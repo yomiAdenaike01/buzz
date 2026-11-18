@@ -17,6 +17,10 @@ type Question struct {
 	Metadata string `json:"metadata"`
 }
 
+func (q Question) CanVote() bool {
+	return q.Category == "Most Likely To"
+}
+
 type AppConfig struct {
 	CLOUD_FLARE_ACCOUNT_ID string
 	CLOUD_FLARE_AI_MODEL   string
